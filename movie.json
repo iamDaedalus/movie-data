@@ -3,12 +3,12 @@
     "title": "Movie Title 1",
     "link": "http://linktomovie1.com",
     "synopsis": "Synopsis of Movie 1.",
-    "postId": "movie-title-1" // Unique identifier for post matching
+    "postId": "movie-title-1"
   },
   {
     "title": "Movie Title 2",
     "link": "http://linktomovie2.com",
     "synopsis": "Synopsis of Movie 2.",
-    "postId": "movie-title-2" // Unique identifier for post matching
+    "postId": "movie-title-2"
   }
 ]
