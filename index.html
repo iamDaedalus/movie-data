@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stream M3U8 with Subtitles</title>
+</head>
+<body>
+
+  <h1>Stream M3U8 with HLS.js</h1>
+
+  <video id="video" controls width="640" height="360">
+    <!-- The video will be injected here -->
+  </video>
+
+  <input type="file" id="subtitle-file" accept=".srt" />
+  <p>Current Time: <span id="current-time">0:00</span> (minutes)</p>
+  <div id="subtitle-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    if (Hls.isSupported()) {
+      var video = document.getElementById('video');
+      var hls = new Hls();
+      hls.loadSource('https://florvexlight23.xyz/file1/u6lV5lT6tqwCV647APXn4yL8zi3eTAD11+UDVscKrlu3abtdtnNsX2ekSco~H~AHgKMG9NASc0lIu1RVdu+SJ3wlMnNcFvrJBTeBIHGZ57NUITtOPXaZCCjE6SgHo78bsmHK1Yx7WkIGfQkFScIh~vq~6hA~GLEtfF2U7+kZiS4=/cGxheWxpc3QubTN1OA==.m3u8');
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        video.play();
+      });
+
+      var subtitles = [];
+      var subtitleContainer = document.getElementById('subtitle-container');
+
+      // Load subtitle file
+      document.getElementById('subtitle-file').addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (file && file.name.endsWith('.srt')) {
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            var srtText = event.target.result;
+            subtitles = parseSRT(srtText);
+          };
+          reader.readAsText(file);
+        }
+      });
+
+      // Parse SRT subtitles
+      function parseSRT(srtText) {
+        var lines = srtText.split('\n');
+        var parsedSubtitles = [];
+        var subtitle = {};
+        var timeRegex = /(\d{2}):(\d{2}):(\d{2}),(\d{3}) --> (\d{2}):(\d{2}):(\d{2}),(\d{3})/;
+
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].trim();
+          
+          if (line.match(/^\d+$/)) {
+            // Subtitle index, do nothing
+            continue;
+          }
+
+          var timeMatch = line.match(timeRegex);
+          if (timeMatch) {
+            // Parsing time range
+            var start = toSeconds(timeMatch[1], timeMatch[2], timeMatch[3], timeMatch[4]);
+            var end = toSeconds(timeMatch[5], timeMatch[6], timeMatch[7], timeMatch[8]);
+            subtitle.start = start;
+            subtitle.end = end;
+          } else if (line === '') {
+            // Empty line, finalize current subtitle
+            if (subtitle.text) {
+              parsedSubtitles.push(subtitle);
+            }
+            subtitle = {};
+          } else {
+            // Add subtitle text
+            subtitle.text = subtitle.text ? subtitle.text + '\n' + line : line;
+          }
+        }
+        return parsedSubtitles;
+      }
+
+      // Convert time to seconds
+      function toSeconds(hour, minute, second, millisecond) {
+        return parseInt(hour) * 3600 + parseInt(minute) * 60 + parseInt(second) + parseInt(millisecond) / 1000;
+      }
+
+      // Display subtitles based on current time
+      video.ontimeupdate = function () {
+        var currentTimeInSeconds = video.currentTime;
+        var currentTimeInMinutes = Math.floor(currentTimeInSeconds / 60);
+        var currentTimeInSecondsMod = Math.floor(currentTimeInSeconds % 60);
+        document.getElementById('current-time').textContent = currentTimeInMinutes + ':' + (currentTimeInSecondsMod < 10 ? '0' + currentTimeInSecondsMod : currentTimeInSecondsMod);
+
+        var currentSubtitle = getCurrentSubtitle(currentTimeInSeconds);
+        if (currentSubtitle) {
+          subtitleContainer.textContent = currentSubtitle.text;
+        } else {
+          subtitleContainer.textContent = ''; // No subtitle
+        }
+      };
+
+      // Get subtitle based on current time
+      function getCurrentSubtitle(currentTime) {
+        return subtitles.find(function(subtitle) {
+          return currentTime >= subtitle.start && currentTime <= subtitle.end;
+        });
+      }
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Native HLS support (Safari)
+      video.src = 'https://zeltroncloud66.pro/file2/6U0bKbUSdJtZ9vAxIjRjcSPBLGllBgViKu9hsdOfs4hJPgk7qPYEXpjMR6iedhclHDLCNWAn9EwqTVpogcKeaYj+qRovQ3icC0oMgPz3GU6abXGc1dNh2fPjgvddIoVMrX~SaPTzuRdkNE5ymJn~QA==/NzIw/aW5kZXgubTN1OA==.m3u8';
+      video.play();
+
+      // Native subtitle display and time tracking (if needed)
+    }
+  </script>
+
+</body>
+</html>
