@@ -547,7 +547,7 @@
           : null;
 
         const backdrop = data.backdrop_path;
-        const backdropUrl = `https://image.tmdb.org/t/p/w1280/${backdrop}`;
+        const backdropUrl = `https://image.tmdb.org/t/p/original/${backdrop}`;
 
         const slider = document.createElement("div");
         slider.classList.add("swiper-slide", "slide-landing");
@@ -604,7 +604,7 @@
           const mediaType = meow.media_type;
           const mediaId = meow.id;
           const backdrop = meow.backdrop_path;
-          const backdropFallback = `https://image.tmdb.org/t/p/w1280/${backdrop}`;
+          const backdropFallback = `https://image.tmdb.org/t/p/original/${backdrop}`;
           const backdropEndpoint = `https://api.themoviedb.org/3/${mediaType}/${mediaId}/images?api_key=${apiKey}&include_image_language=en`;
 
           try {
@@ -617,7 +617,7 @@
               (img) => img.iso_639_1 === "en"
             );
             const englishBackdropUrl = englishBackdrop
-              ? `https://image.tmdb.org/t/p/w1280${englishBackdrop.file_path}`
+              ? `https://image.tmdb.org/t/p/original${englishBackdrop.file_path}`
               : backdropFallback;
 
             const topTenSlide = document.createElement("div");
