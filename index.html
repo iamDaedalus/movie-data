@@ -116,6 +116,7 @@
       }
 
       .top-ten-container {
+        position: relative;
         display: flex;
         align-items: center;
         color: white;
@@ -177,7 +178,6 @@
         height: 100%;
         width: 100%;
         border-radius: 12px;
-  
       }
     </style>
   </head>
@@ -186,7 +186,7 @@
     <div class="player" id="player">
       <div style="display: flex; justify-content: space-between; width: 100%">
         <button id="close-player">Close</button>
-        <p style="color: white;">Change server if the current is slow</p>
+        <p style="color: white">Change server if the current is slow</p>
         <select id="select-server"></select>
       </div>
       <iframe
@@ -335,26 +335,6 @@
         width: 50%;
         filter: drop-shadow(0 0 3px black);
       }
-
-      @media only screen and (max-width: 800px) {
-        .landing-info {
-          width: 100%;
-          left: 0;
-          padding: 0 20px;
-          justify-content: center;
-          align-items: center;
-        }
-         *{
-          font-size: .8rem;
-         }
-
-             .slide-landing::before {
-    
-        background: linear-gradient(0deg, #0d0d0d 15%, #0d0d0d20 80%, #0d0d0dc3);
-    
-      }
-     
-      }
     </style>
 
     <header>
@@ -449,12 +429,11 @@
       }
       .onzxcstream {
         position: relative;
-        font-size: 2.8rem;
+        font-size: 2.4rem;
         font-weight: 600;
         letter-spacing: 3px;
         word-spacing: 5px;
-        -webkit-text-stroke: 0.5px #000000;
-        -webkit-text-fill-color: #8d0e0e;
+        color: #8d0e0e;
       }
       .onzxcstream::before {
         content: "";
@@ -473,13 +452,50 @@
         <h1 class="top-ten-text">P</h1>
         <h1 class="top-ten-text">1</h1>
         <h1 class="top-ten-text">0</h1>
-        <div>
-          <p class="onzxcstream">ON Z[STREAM]</p>
+        <div class="onzxcstream-container">
+          <p class="onzxcstream">
+            ON <br />
+            Z[STREAM]
+          </p>
         </div>
       </div>
       <div class="swiper-wrapper wrapper-topten"></div>
     </div>
     <div style="height: 100vh"></div>
+    <style>
+      @media only screen and (max-width: 700px) {
+        .landing-info {
+          width: 100%;
+          left: 0;
+          padding: 0 20px;
+          justify-content: center;
+          align-items: center;
+        }
+        * {
+          font-size: 0.8rem;
+        }
+
+        .slide-landing::before {
+          background: linear-gradient(
+            0deg,
+            #0d0d0d 15%,
+            #0d0d0d20 80%,
+            #0d0d0dc3
+          );
+        }
+        .onzxcstream {
+          font-size: 2.5em;
+        }
+
+        .slide-topTen {
+          width: 250px;
+          height: 150px;
+        }
+        .top-ten-text{
+          font-size: 6.5rem;
+        }
+      }
+    </style>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
@@ -1015,4 +1031,3 @@
     topten();
   </script>
 </html>
-
