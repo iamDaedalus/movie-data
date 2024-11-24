@@ -1,119 +1,1018 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stream M3U8 with Subtitles</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=bespoke-stencil@400,500,700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/movie-style.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Bespoke Stencil";
+        /* border: 1px solid red; */
+        user-select: none;
+      }
+      body {
+        position: relative;
+        background: #0d0d0d;
+        max-width: 1900px;
+        margin: 0 auto;
+      }
+      body::-webkit-scrollbar {
+        display: none;
+      }
+      #first {
+        height: 85vh;
+        width: 100%;
+        overflow: hidden;
+      }
 
-  <h1>Stream M3U8 with HLS.js</h1>
+      .slide-landing {
+        position: relative;
+        height: 95%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        opacity: 0;
+        transition: opacity 1s, filter 0.5s;
+        filter: blur(10px);
+        cursor: grab;
+      }
+      .slide-landing:active {
+        cursor: grabbing;
+      }
+      .swiper-slide-active {
+        opacity: 1;
+        filter: blur(0);
+      }
+      .slide-landing::before {
+        content: "";
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        background: linear-gradient(0deg, #0d0d0d, #0d0d0d20 60%, #0d0d0de5);
+        z-index: 2;
+      }
+      .backdrop-img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: center 30%;
+      }
 
-  <video id="video" controls width="640" height="360">
-    <!-- The video will be injected here -->
-  </video>
+      .pagination-landing-progressbar {
+        position: fixed;
+        top: 0;
+      }
+      .swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
+        background-color: #fb2727; /* Set your desired color */
+        height: 1px;
+      }
 
-  <input type="file" id="subtitle-file" accept=".srt" />
-  <p>Current Time: <span id="current-time">0:00</span> (minutes)</p>
-  <div id="subtitle-container"></div>
+      .landing-info {
+        position: absolute;
+        width: 50%;
+        z-index: 5;
+        color: white;
+        left: 50px;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        gap: 20px;
+        transform: translateY(50%);
+        transition: 0.8s cubic-bezier(0.2, 1, 0.75, 1);
+        opacity: 0;
+        filter: blur(10px);
+      }
+      .swiper-slide-active .landing-info {
+        transform: translateY(0%);
+        opacity: 1;
+        filter: blur(0);
+      }
 
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+      .top-ten {
+        position: relative;
+        height: 65vh;
+        max-width: 95%;
+        margin: 0 auto;
+        color: white;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .top-ten-container {
+        display: flex;
+        align-items: center;
+        color: white;
+        height: 180px;
+        z-index: 99;
+      }
+      .top-ten-text {
+        position: relative;
+        font-family: sans-serif;
+        font-weight: 800;
+        font-size: 7.5rem;
+        -webkit-text-stroke: 2px rgb(255, 17, 17);
+        -webkit-text-fill-color: transparent;
+      }
+      .top-ten-text::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0df7 90%);
+      }
+      .top-ten-text:nth-child(2),
+      .top-ten-text:nth-child(3),
+      .top-ten-text:nth-child(4),
+      .top-ten-text:nth-child(5) {
+        margin-left: -20px;
+      }
+      .player {
+        display: none;
+        height: 100vh;
+        width: 100%;
+        position: fixed;
+        z-index: 9999;
+        background: red;
+      }
+      .player-active {
+        display: block;
+      }
+
+      .player {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 99999;
+        flex-direction: column;
+      }
+
+      .player-active {
+        display: flex;
+      }
+      #iframe-player {
+        height: 100%;
+        width: 100%;
+        border-radius: 12px;
+  
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="player" id="player">
+      <div style="display: flex; justify-content: space-between; width: 100%">
+        <button id="close-player">Close</button>
+        <p style="color: white;">Change server if the current is slow</p>
+        <select id="select-server"></select>
+      </div>
+      <iframe
+        id="iframe-player"
+        src=""
+        frameborder="0"
+        allowfullscreen
+      ></iframe>
+    </div>
+    <style>
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        height: 100vh;
+        width: 100%;
+        background: #0d0d0d;
+        z-index: 999;
+        padding: 20px 40px;
+        max-width: 1900px;
+        margin: 0 auto;
+        color: white;
+        gap: 40px;
+      }
+      .modal-active {
+        display: flex;
+      }
+      #poster-container {
+        position: relative;
+
+        width: 35%;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #poster-container img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+      #content-container {
+        width: 65%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+      }
+      #modal-title-container {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .tab-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      #modal-info-container {
+        height: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .tab-buttons button {
+        padding: 10px;
+        width: 100%;
+        border: 0;
+      }
+      .close-modal {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 2rem;
+        padding: 0 15px;
+        font-weight: 400;
+        z-index: 99;
+        background: transparent;
+        border: none;
+        color: white;
+      }
+      #poster-wrapper {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .button-active {
+        color: rgb(229, 31, 31);
+      }
+      #episodes-container {
+        height: 100%;
+        width: 100%;
+        overflow-y: auto;
+      }
+      #season-dropdown {
+        width: 100%;
+        padding: 10px;
+      }
+    </style>
+
+    <div id="modal" class="modal">
+      <button class="close-modal">&times;</button>
+      <div id="poster-container">
+        <div id="poster-wrapper"></div>
+      </div>
+      <div id="content-container">
+        <div id="modal-title-container"></div>
+        <div class="tab-buttons">
+          <button id="overview-button">OVERVIEW</button>
+          <button id="episodes-button" style="display: none">EPISODES</button>
+          <button id="trailer-button">TRAILER</button>
+          <button id="more-button">MORE LIKE THIS</button>
+        </div>
+        <div id="modal-info-container"></div>
+      </div>
+    </div>
+    <style>
+      header {
+        position: absolute;
+        z-index: 5;
+        color: white;
+        top: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+      }
+      .logo-container {
+        position: relative;
+        height: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+      .logo-title-img {
+        width: 50%;
+        filter: drop-shadow(0 0 3px black);
+      }
+
+      @media only screen and (max-width: 800px) {
+        .landing-info {
+          width: 100%;
+          left: 0;
+          padding: 0 20px;
+          justify-content: center;
+          align-items: center;
+        }
+         *{
+          font-size: .8rem;
+         }
+
+             .slide-landing::before {
+    
+        background: linear-gradient(0deg, #0d0d0d 15%, #0d0d0d20 80%, #0d0d0dc3);
+    
+      }
+     
+      }
+    </style>
+
+    <header>
+      <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>Home</a> -->
+      <div class="logo-container">
+        <img
+          style="height: 100%; width: 100%; object-fit: cover; z-index: 1"
+          src="https://i.ibb.co/n0c3gXW/1.png"
+          alt=""
+        />
+        <h1
+          style="
+            position: absolute;
+            font-size: 2.3rem;
+            opacity: 0.5;
+            letter-spacing: 2px;
+          "
+        >
+          [STREAM]
+        </h1>
+      </div>
+    </header>
+    <div class="swiper-container" id="first">
+      <div class="swiper-wrapper wrapper-landing"></div>
+      <div class="swiper-pagination pagination-landing"></div>
+    </div>
+
+    <style>
+      .wrapper-topten {
+        display: flex;
+        align-items: center;
+        height: calc(100% - 180px);
+        width: 100%;
+        z-index: 99;
+      }
+
+      .slide-topTen {
+        position: relative;
+        height: 220px;
+        width: 400px;
+        filter: blur(5px);
+        transition: filter 0.5s;
+      }
+      .slide-topTen:hover {
+        z-index: 99;
+      }
+      .toptenimg {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+        transition: 0.2s;
+        background: rgb(220, 220, 220);
+        box-shadow: 0 0 15px 1px rgb(6, 6, 6);
+      }
+      .slide-topTen:hover .toptenimg {
+        transform: scale(1.06);
+      }
+      .numbering {
+        position: relative;
+        font-family: sans-serif;
+        font-size: 8rem;
+        position: absolute;
+        z-index: -1;
+        left: -55px;
+        bottom: 0;
+        -webkit-text-stroke: 2px rgb(255, 17, 17);
+        -webkit-text-fill-color: transparent;
+        transition: 0.5s;
+        filter: drop-shadow(0 0 2px #0d0d0d);
+      }
+      .slide-topTen:hover .numbering {
+        -webkit-text-fill-color: rgb(255, 17, 17);
+        transform: translateX(-25%) scale(1.1);
+      }
+      .numbering::before {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0df7 80%);
+        transition: 0.5s;
+      }
+      .slide-topTen:hover .numbering::before {
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0df7 95%);
+      }
+      .slide-topTen.swiper-slide-active,
+      .slide-topTen.swiper-slide-prev,
+      .slide-topTen.swiper-slide-next {
+        filter: blur(0);
+      }
+      .onzxcstream {
+        position: relative;
+        font-size: 2.8rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        word-spacing: 5px;
+        -webkit-text-stroke: 0.5px #000000;
+        -webkit-text-fill-color: #8d0e0e;
+      }
+      .onzxcstream::before {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0d8c 95%);
+      }
+    </style>
+
+    <div id="second" class="top-ten">
+      <div class="top-ten-container">
+        <h1 class="top-ten-text">T</h1>
+        <h1 class="top-ten-text">O</h1>
+        <h1 class="top-ten-text">P</h1>
+        <h1 class="top-ten-text">1</h1>
+        <h1 class="top-ten-text">0</h1>
+        <div>
+          <p class="onzxcstream">ON Z[STREAM]</p>
+        </div>
+      </div>
+      <div class="swiper-wrapper wrapper-topten"></div>
+    </div>
+    <div style="height: 100vh"></div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
-    if (Hls.isSupported()) {
-      var video = document.getElementById('video');
-      var hls = new Hls();
-      hls.loadSource('https://florvexlight23.xyz/file1/u6lV5lT6tqwCV647APXn4yL8zi3eTAD11+UDVscKrlu3abtdtnNsX2ekSco~H~AHgKMG9NASc0lIu1RVdu+SJ3wlMnNcFvrJBTeBIHGZ57NUITtOPXaZCCjE6SgHo78bsmHK1Yx7WkIGfQkFScIh~vq~6hA~GLEtfF2U7+kZiS4=/cGxheWxpc3QubTN1OA==.m3u8');
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, function () {
-        video.play();
-      });
+    const apiKey = "47a1a7df542d3d483227f758a7317dff";
+    const first = document.getElementById("first");
+    const second = document.getElementById("second");
+    const showlist = [
+      { id: "1184918", media_type: "movie" },
+      { id: "1429", media_type: "tv" },
+      { id: "90228", media_type: "tv" },
+      { id: "912649", media_type: "movie" },
+      { id: "26466", media_type: "movie" },
+      { id: "591274", media_type: "movie" },
+      { id: "85552", media_type: "tv" },
+      { id: "94605", media_type: "tv" },
+      { id: "1100782", media_type: "movie" },
+      { id: "402431", media_type: "movie" },
+      { id: "1290486", media_type: "movie" },
+      { id: "124364", media_type: "tv" },
+      { id: "297608", media_type: "movie" },
+    ];
 
-      var subtitles = [];
-      var subtitleContainer = document.getElementById('subtitle-container');
+    const wrapper = document.querySelector(".wrapper-landing");
+    const toptenwrapper = document.querySelector(".wrapper-topten");
 
-      // Load subtitle file
-      document.getElementById('subtitle-file').addEventListener('change', function(e) {
-        var file = e.target.files[0];
-        if (file && file.name.endsWith('.srt')) {
-          var reader = new FileReader();
-          reader.onload = function(event) {
-            var srtText = event.target.result;
-            subtitles = parseSRT(srtText);
-          };
-          reader.readAsText(file);
+    async function omsim(showid) {
+      const endpoint = `https://api.themoviedb.org/3/${showid.media_type}/${showid.id}?api_key=${apiKey}`;
+      const logoEndpoint = `https://api.themoviedb.org/3/${showid.media_type}/${showid.id}/images?api_key=${apiKey}&include_image_language=en`;
+      try {
+        const response = await fetch(endpoint);
+        const responseLogo = await fetch(logoEndpoint);
+
+        if (!response.ok || !responseLogo.ok) {
+          throw new Error("Movie Not Found");
         }
-      });
+        const data = await response.json();
+        const datalogo = await responseLogo.json();
 
-      // Parse SRT subtitles
-      function parseSRT(srtText) {
-        var lines = srtText.split('\n');
-        var parsedSubtitles = [];
-        var subtitle = {};
-        var timeRegex = /(\d{2}):(\d{2}):(\d{2}),(\d{3}) --> (\d{2}):(\d{2}):(\d{2}),(\d{3})/;
+        const title = data.title || data.name || "Unavailable";
+        const overview = data.overview || "No overview available";
+        const tagline = data.tagline || "";
 
-        for (var i = 0; i < lines.length; i++) {
-          var line = lines[i].trim();
-          
-          if (line.match(/^\d+$/)) {
-            // Subtitle index, do nothing
-            continue;
-          }
+        const logo =
+          datalogo.logos && datalogo.logos.length > 0
+            ? datalogo.logos[0].file_path
+            : null;
+        const titleLogoUrl = logo
+          ? `https://image.tmdb.org/t/p/w500${logo}`
+          : null;
 
-          var timeMatch = line.match(timeRegex);
-          if (timeMatch) {
-            // Parsing time range
-            var start = toSeconds(timeMatch[1], timeMatch[2], timeMatch[3], timeMatch[4]);
-            var end = toSeconds(timeMatch[5], timeMatch[6], timeMatch[7], timeMatch[8]);
-            subtitle.start = start;
-            subtitle.end = end;
-          } else if (line === '') {
-            // Empty line, finalize current subtitle
-            if (subtitle.text) {
-              parsedSubtitles.push(subtitle);
-            }
-            subtitle = {};
-          } else {
-            // Add subtitle text
-            subtitle.text = subtitle.text ? subtitle.text + '\n' + line : line;
-          }
-        }
-        return parsedSubtitles;
-      }
+        const backdrop = data.backdrop_path;
+        const backdropUrl = `https://image.tmdb.org/t/p/w1280/${backdrop}`;
 
-      // Convert time to seconds
-      function toSeconds(hour, minute, second, millisecond) {
-        return parseInt(hour) * 3600 + parseInt(minute) * 60 + parseInt(second) + parseInt(millisecond) / 1000;
-      }
+        const slider = document.createElement("div");
+        slider.classList.add("swiper-slide", "slide-landing");
+        slider.innerHTML = `
+              <div class="landing-info">
+              ${
+                titleLogoUrl
+                  ? `<img data-src="${titleLogoUrl}"  class="logo-title-img lazy-load" alt="${title}"/>`
+                  : `<h1>${title}</h1>`
+              }
+               <i>${tagline}</i>
+                <p style="text-align: justify; font-size: 1rem;">${overview}</p>
 
-      // Display subtitles based on current time
-      video.ontimeupdate = function () {
-        var currentTimeInSeconds = video.currentTime;
-        var currentTimeInMinutes = Math.floor(currentTimeInSeconds / 60);
-        var currentTimeInSecondsMod = Math.floor(currentTimeInSeconds % 60);
-        document.getElementById('current-time').textContent = currentTimeInMinutes + ':' + (currentTimeInSecondsMod < 10 ? '0' + currentTimeInSecondsMod : currentTimeInSecondsMod);
+              </div>
+                ${
+                  backdropUrl
+                    ? `<img data-src="${backdropUrl}" class="backdrop-img lazy-load" alt="${title}"/>`
+                    : ""
+                }
+                `;
 
-        var currentSubtitle = getCurrentSubtitle(currentTimeInSeconds);
-        if (currentSubtitle) {
-          subtitleContainer.textContent = currentSubtitle.text;
-        } else {
-          subtitleContainer.textContent = ''; // No subtitle
-        }
-      };
-
-      // Get subtitle based on current time
-      function getCurrentSubtitle(currentTime) {
-        return subtitles.find(function(subtitle) {
-          return currentTime >= subtitle.start && currentTime <= subtitle.end;
+        slider.addEventListener("click", () => {
+          modal(showid.media_type, showid.id);
         });
+
+        wrapper.appendChild(slider);
+      } catch (error) {
+        console.error("Error", error.message);
       }
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Native HLS support (Safari)
-      video.src = 'https://zeltroncloud66.pro/file2/6U0bKbUSdJtZ9vAxIjRjcSPBLGllBgViKu9hsdOfs4hJPgk7qPYEXpjMR6iedhclHDLCNWAn9EwqTVpogcKeaYj+qRovQ3icC0oMgPz3GU6abXGc1dNh2fPjgvddIoVMrX~SaPTzuRdkNE5ymJn~QA==/NzIw/aW5kZXgubTN1OA==.m3u8';
-      video.play();
-
-      // Native subtitle display and time tracking (if needed)
     }
-  </script>
 
-</body>
+    async function fetchDelay() {
+      for (const showId of showlist) {
+        await omsim(showId);
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+      swiperIni();
+      tamad();
+    }
+
+    async function topten() {
+      const endpoint = `https://api.themoviedb.org/3/trending/all/week?api_key=${apiKey}`;
+
+      try {
+        const response = await fetch(endpoint);
+        if (!response.ok) {
+          throw new Error("Movie List Not Found");
+        }
+        const data = await response.json();
+
+        for (const [index, meow] of data.results.slice(0, 10).entries()) {
+          const number = index + 1;
+          const title = meow.title || meow.name;
+          const mediaType = meow.media_type;
+          const mediaId = meow.id;
+          const backdrop = meow.backdrop_path;
+          const backdropFallback = `https://image.tmdb.org/t/p/w1280/${backdrop}`;
+          const backdropEndpoint = `https://api.themoviedb.org/3/${mediaType}/${mediaId}/images?api_key=${apiKey}&include_image_language=en`;
+
+          try {
+            const backdropResponse = await fetch(backdropEndpoint);
+            if (!backdropResponse.ok) {
+              throw new Error("Backdrop Not Found");
+            }
+            const backdropData = await backdropResponse.json();
+            const englishBackdrop = backdropData.backdrops.find(
+              (img) => img.iso_639_1 === "en"
+            );
+            const englishBackdropUrl = englishBackdrop
+              ? `https://image.tmdb.org/t/p/w1280${englishBackdrop.file_path}`
+              : backdropFallback;
+
+            const topTenSlide = document.createElement("div");
+            topTenSlide.classList.add("swiper-slide", "slide-topTen");
+
+            topTenSlide.innerHTML = `
+            <h1 class="numbering">${number}</h1>
+            <img class="toptenimg lazy-load" data-src="${englishBackdropUrl}">
+          `;
+
+            topTenSlide.addEventListener("click", () => {
+              modal(mediaType, mediaId);
+            });
+
+            toptenwrapper.appendChild(topTenSlide);
+          } catch (error) {
+            console.error("Error fetching backdrop:", error.message);
+          }
+        }
+        swiperIni2();
+      } catch (error) {
+        console.error("Error", error.message);
+      }
+    }
+
+    async function modal(mediaType, mediaId) {
+      const apiBase = `https://api.themoviedb.org/3/${mediaType}/${mediaId}`;
+      const endpoint = `${apiBase}?api_key=${apiKey}`;
+      const creditsEndpoint = `${apiBase}/credits?api_key=${apiKey}`;
+
+      try {
+        // Fetching main media details
+        const response = await fetch(endpoint);
+        const creditsResponse = await fetch(creditsEndpoint);
+        if (!response.ok || !creditsResponse.ok) {
+          throw new Error("Movie Not Found");
+        }
+        const data = await response.json();
+        const creditsData = await creditsResponse.json();
+
+        const title = data.title || data.name;
+        const overview = data.overview;
+        const runtime = data.runtime || "";
+        const tagline = data.tagline || "";
+        const genre =
+          data.genres.map((genre) => genre.name).join(", ") || "Unknown";
+        const rating = data.vote_average;
+        const poster = data.poster_path;
+        const posterUrl = `https://image.tmdb.org/t/p/original/${poster}`;
+        const releaseDate = data.release_date || data.first_air_date || "";
+        const releaseYear = releaseDate ? releaseDate.split("-")[0] : "N/A";
+        const cast = creditsData.cast.slice(0, 20);
+        const modal = document.querySelector(".modal");
+        const modalPoster = document.getElementById("poster-wrapper");
+        const contentContainer = document.getElementById("content-container");
+        const modalTitleContainer = document.getElementById(
+          "modal-title-container"
+        );
+        const modalInfoContainer = document.getElementById(
+          "modal-info-container"
+        );
+        const overviewButton = document.getElementById("overview-button");
+        const episodeButton = document.getElementById("episodes-button");
+        const trailerButton = document.getElementById("trailer-button");
+
+        modal.classList.add("modal-active");
+
+        modalPoster.innerHTML = `<img src="${posterUrl}"/>`;
+        modalTitleContainer.innerHTML = `<h1 style="font-size:3rem; 
+        
+        text-transform: uppercase;">${title}</h1>
+        <div style="display: flex; gap: 15px;">
+        <p>${runtime}</p>|<p>${rating}</p>|<p>
+        ${releaseYear}</p>
+        </div>
+        
+        </p>
+        ${tagline}</p>`;
+        modalInfoContainer.innerHTML = `<p>${overview}</p> </p>
+        ${genre}</p>`;
+        overviewButton.classList.add("button-active");
+
+        const castSwiperContainer = document.createElement("div");
+        castSwiperContainer.id = "third";
+        castSwiperContainer.classList.add("swiper-container");
+        const castContainer = document.createElement("div");
+        castContainer.id = "cast-container";
+        castContainer.classList.add("swiper-wrapper");
+        cast.forEach((actor) => {
+          const actorCard = document.createElement("div");
+          actorCard.classList.add("actor-card", "swiper-slide");
+
+          const actorImg = actor.profile_path
+            ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
+            : "https://via.placeholder.com/100x150?text=No+Image";
+          actorCard.innerHTML = `
+        <img src="${actorImg}" alt="${actor.name}">
+        <p>${actor.name}</p>`;
+
+          modalInfoContainer.appendChild(castSwiperContainer);
+          castSwiperContainer.appendChild(castContainer);
+          castContainer.appendChild(actorCard);
+          swiperActor();
+        });
+
+        if (mediaType === "tv") {
+          episodeButton.style.display = "block";
+          episodeButton.addEventListener("click", () => {
+            episodeButton.classList.add("button-active");
+            trailerButton.classList.remove("button-active");
+            overviewButton.classList.remove("button-active");
+
+            modalInfoContainer.innerHTML = "";
+            const seasonDropDown = document.createElement("select");
+            seasonDropDown.id = "season-dropdown";
+            seasonDropDown.innerHTML = data.seasons
+              .map(
+                (season, index) =>
+                  `<option value="${season.season_number}" ${
+                    season.season_number === 1 || index === 0 ? "selected" : ""
+                  }>${season.name || `Season ${season.season_number}`}</option>`
+              )
+              .join("");
+
+            modalInfoContainer.appendChild(seasonDropDown);
+
+            const episodesContainer = document.createElement("div");
+            episodesContainer.id = "episodes-container";
+            modalInfoContainer.appendChild(episodesContainer);
+
+            // Function to load and display episodes
+            async function loadEpisodes(seasonNumber) {
+              try {
+                const seasonEndpoint = `${apiBase}/season/${seasonNumber}?api_key=${apiKey}`;
+                const seasonResponse = await fetch(seasonEndpoint);
+                const seasonData = await seasonResponse.json();
+
+                episodesContainer.innerHTML = `<h2>${
+                  seasonData.name || `Season ${seasonNumber}`
+                }</h2>`;
+                const episodesList = document.createElement("ul");
+
+                seasonData.episodes.forEach((episode) => {
+                  const episodeItem = document.createElement("li");
+                  episodeItem.style.display = "flex";
+                  episodeItem.style.alignItems = "flex-start";
+                  episodeItem.style.marginBottom = "1rem";
+
+                  const imageUrl = episode.still_path
+                    ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
+                    : "https://via.placeholder.com/300x169?text=No+Image";
+
+                  episodeItem.innerHTML = `
+              <img data-src="${imageUrl}" class="lazy-load" alt="${
+                    episode.name
+                  }" style="width: 150px; height: auto; margin-right: 1rem; border-radius: 5px;" />
+              <div>
+                <strong>E${episode.episode_number} - ${
+                    episode.name
+                  }</strong><br>
+                <p>${episode.overview || "No description available."}</p>
+              </div>
+            `;
+
+                  episodeItem.addEventListener("click", () => {
+                    console.log(
+                      "Clicked episode:",
+                      episode.episode_number,
+                      "Season:",
+                      seasonNumber
+                    );
+                    openIframeModal({
+                      movieId: mediaId,
+                      type: "tv",
+                      seasonNumber1: seasonNumber,
+                      episodeNumber1: episode.episode_number,
+                    });
+                  });
+                  episodesList.appendChild(episodeItem);
+                });
+
+                episodesContainer.appendChild(episodesList);
+              } catch (error) {
+                console.error("Error fetching episodes:", error);
+                episodesContainer.innerHTML =
+                  "<p>Error loading episodes. Please try again.</p>";
+              }
+
+              tamad();
+            }
+
+            // Load the initial season
+            const initialSeason = seasonDropDown.value;
+            loadEpisodes(initialSeason);
+
+            // Add event listener for dropdown changes
+            seasonDropDown.addEventListener("change", (e) => {
+              loadEpisodes(e.target.value);
+            });
+          });
+        }
+
+        // Fetch trailer data
+        const trailerEndpoint = `${apiBase}/videos?api_key=${apiKey}`;
+        const trailerResponse = await fetch(trailerEndpoint);
+        if (!trailerResponse.ok) {
+          throw new Error("Trailer Not Found");
+        }
+        const trailerData = await trailerResponse.json();
+        const trailer = trailerData.results.find(
+          (video) => video.type === "Trailer" && video.site === "YouTube"
+        );
+
+        overviewButton.addEventListener("click", () => {
+          modalInfoContainer.innerHTML = `<p>${overview}</p><p>${genre}</p>`;
+
+          const castSwiperContainer = document.createElement("div");
+          castSwiperContainer.id = "third";
+          castSwiperContainer.classList.add("swiper-container");
+          const castContainer = document.createElement("div");
+          castContainer.id = "cast-container";
+          castContainer.classList.add("swiper-wrapper");
+          cast.forEach((actor) => {
+            const actorCard = document.createElement("div");
+            actorCard.classList.add("actor-card", "swiper-slide");
+
+            const actorImg = actor.profile_path
+              ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
+              : "https://via.placeholder.com/100x150?text=No+Image";
+            actorCard.innerHTML = `
+        <img src="${actorImg}" alt="${actor.name}">
+        <p>${actor.name}</p>`;
+
+            modalInfoContainer.appendChild(castSwiperContainer);
+            castSwiperContainer.appendChild(castContainer);
+            castContainer.appendChild(actorCard);
+            swiperActor();
+          });
+
+          overviewButton.classList.add("button-active");
+          trailerButton.classList.remove("button-active");
+          episodeButton.classList.remove("button-active");
+        });
+
+        if (trailer) {
+          trailerButton.addEventListener("click", () => {
+            modalInfoContainer.innerHTML = "";
+            const iframe = document.createElement("iframe");
+            iframe.src = `https://www.youtube.com/embed/${trailer.key}`;
+            iframe.width = "100%";
+            iframe.height = "100%";
+            iframe.frameborder = "0";
+            iframe.allow =
+              "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            iframe.allowfullscreen = true;
+            modalInfoContainer.appendChild(iframe);
+
+            trailerButton.classList.add("button-active");
+            overviewButton.classList.remove("button-active");
+            episodeButton.classList.remove("button-active");
+          });
+        } else {
+          trailerButton.innerText = "(TRAILER UNAVAILABLE)";
+          trailerButton.setAttribute("disabled", "");
+        }
+
+        document.querySelector(".close-modal").addEventListener("click", () => {
+          modal.classList.remove("modal-active");
+
+          // Reset modal content
+          modalPoster.innerHTML = "";
+          modalInfoContainer.innerHTML = "";
+          modalTitleContainer.innerHTML = "";
+          trailerButton.innerText = "TRAILER";
+          trailerButton.removeAttribute("disabled");
+          episodeButton.classList.remove("button-active");
+          overviewButton.classList.remove("button-active");
+          trailerButton.classList.remove("button-active");
+          episodeButton.style.display = "none";
+
+          // Clean up season dropdown and episodes container
+          const seasonDropDown = document.getElementById("season-dropdown");
+          const episodesContainer =
+            document.getElementById("episodes-container");
+
+          if (seasonDropDown) {
+            seasonDropDown.remove(); // Remove the dropdown element
+          }
+          if (episodesContainer) {
+            episodesContainer.remove(); // Remove the episodes container
+          }
+        });
+
+        modalPoster.addEventListener("click", () => {
+          const movieId = mediaId; // Current media ID
+          const type = mediaType; // Current media type
+          const seasonNumber =
+            document.getElementById("season-dropdown")?.value || null;
+          const episodeNumber =
+            document.querySelector("#episodes-container li.selected")?.dataset
+              .episodeNumber || null;
+
+          // Open the iframe modal with the data
+          openIframeModal({ movieId, type, seasonNumber, episodeNumber });
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function swiperIni() {
+      const swiper = new Swiper("#first", {
+        slidesPerView: 1,
+        loop: true,
+        pagination: {
+          el: ".pagination-landing",
+          clickable: true,
+          type: "progressbar",
+        },
+        autoplay: {
+          delay: 5000,
+        },
+      });
+    }
+
+    function swiperIni2() {
+      const swiper2 = new Swiper("#second", {
+        slidesPerView: "auto",
+        loop: false,
+        centeredSlides: true,
+        initialSlide: 1, // Start from the second slide
+        spaceBetween: 52,
+        mousewheel: false, // Enable mousewheel control
+      });
+    }
+
+    function swiperActor() {
+      const swiper3 = new Swiper("#third", {
+        slidesPerView: "auto",
+        loop: false,
+        centeredSlides: false,
+        spaceBetween: 10,
+        mousewheel: false, // Enable mousewheel control
+      });
+    }
+
+    function tamad() {
+      const tamadpiktur = document.querySelectorAll("img.lazy-load");
+
+      const observer = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              img.src = img.dataset.src;
+              img.classList.remove("lazy-load");
+              observer.unobserve(img);
+            }
+          });
+        },
+        { threshold: 0.01 }
+      );
+
+      tamadpiktur.forEach((Image) => {
+        observer.observe(Image);
+      });
+    }
+
+    function openIframeModal({ movieId, type, seasonNumber1, episodeNumber1 }) {
+      seasonNumber1 = seasonNumber1 ? seasonNumber1 : "1";
+      episodeNumber1 = episodeNumber1 ? episodeNumber1 : "1";
+      const player = document.getElementById("player");
+      player.classList.add("player-active");
+
+      const selectServer = document.getElementById("select-server");
+      const iframePlayer = document.getElementById("iframe-player");
+      selectServer.innerHTML = "";
+      const serverList = [
+        {
+          name: "Server 1",
+          linkMovie: `https://embed.su/embed/movie/${movieId}`,
+          linkTv: `https://embed.su/embed/tv/${movieId}/${seasonNumber1}/${episodeNumber1}`,
+        },
+        {
+          name: "Server 2",
+          linkMovie: `https://vidlink.pro/movie/${movieId}`,
+          linkTv: `https://vidlink.pro/tv/${movieId}/${seasonNumber1}/${episodeNumber1}`,
+        },
+      ];
+
+      serverList.forEach((server) => {
+        const option = document.createElement("option");
+        option.value = type === "movie" ? server.linkMovie : server.linkTv;
+        option.textContent = server.name;
+        selectServer.appendChild(option);
+      });
+
+      iframePlayer.src = selectServer.options[0]?.value || "";
+
+      selectServer.addEventListener("change", () => {
+        iframePlayer.src = selectServer.value;
+      });
+
+      document.getElementById("close-player").addEventListener("click", () => {
+        player.classList.remove("player-active");
+        iframePlayer.src = "";
+      });
+    }
+
+    fetchDelay();
+    topten();
+  </script>
 </html>
+
