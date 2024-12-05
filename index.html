@@ -45,6 +45,9 @@
       align-items: center;
       height: 280px;
       width: 210px;
+      box-shadow: 0 0 3px 2px black;
+      background: black;
+      border-radius: 12px;
     }
     .backdropImage {
       height: 100%;
@@ -75,7 +78,6 @@
       overflow: hidden;
       transition: 0.5s;
       transform: scale(0.85);
-
       filter: blur(10px);
     }
     .posterCardSlide.swiper-slide-active {
@@ -157,6 +159,9 @@
     }
   </style>
   <body>
+    <div class="modal">
+
+    </div>
     <style>
       header {
         position: fixed;
@@ -169,10 +174,11 @@
         justify-content: center;
       }
 
-      .brandLogoContainer{
+      .brandLogoContainer {
         position: relative;
         width: 300px;
-        display: flex;justify-content: center;
+        display: flex;
+        justify-content: center;
         align-items: center;
       }
       .brandLogoContainer img {
@@ -320,18 +326,17 @@
   <script>
     const showlist = [
       { id: "945961", media_type: "movie" },
-      { id: "1184918", media_type: "movie" },
-      { id: "1429", media_type: "tv" },
-      { id: "90228", media_type: "tv" },
-      { id: "912649", media_type: "movie" },
-      { id: "26466", media_type: "movie" },
+      { id: "256274", media_type: "movie" },
+      { id: "170", media_type: "movie" },
+      { id: "744857", media_type: "movie" },
+      { id: "913290", media_type: "movie" },
       { id: "591274", media_type: "movie" },
       { id: "85552", media_type: "tv" },
       { id: "94605", media_type: "tv" },
       { id: "1100782", media_type: "movie" },
       { id: "402431", media_type: "movie" },
       { id: "1290486", media_type: "movie" },
-      { id: "124364", media_type: "tv" },
+      { id: "1184918", media_type: "movie" },
       { id: "297608", media_type: "movie" },
     ];
     const apiKey = "47a1a7df542d3d483227f758a7317dff";
@@ -401,7 +406,7 @@
     async function showlistLoop() {
       for (const meow of showlist) {
         await fetchShow(meow.id, meow.media_type);
-        await new Promise((resolve) => setTimeout(resolve, 10));
+        await new Promise((resolve) => setTimeout(resolve, 30));
       }
       initSwipers();
       tamad();
@@ -547,7 +552,7 @@
     async function companiesLoop() {
       for (const company of companies) {
         await fetchCompanies(company.networkId, company.logoLink);
-        await new Promise((resolve) => setTimeout(resolve, 10));
+        await new Promise((resolve) => setTimeout(resolve, 30));
       }
     }
 
