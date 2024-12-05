@@ -159,21 +159,42 @@
   <body>
     <style>
       header {
-        position: absolute;
-        height: 80px;
+        position: fixed;
+        height: 60px;
         width: 100%;
-        color: wheat;
+        color: whitesmoke;
         z-index: 99;
         padding: 10px;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
+      }
+
+      .brandLogoContainer{
+        position: relative;
+        width: 300px;
+        display: flex;justify-content: center;
+        align-items: center;
+      }
+      .brandLogoContainer img {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        z-index: 1;
+      }
+      .brandLogoContainer h1 {
+        position: absolute;
+        font-size: 2rem;
+        opacity: 0.5;
+        letter-spacing: 2px;
+        filter: drop-shadow(0 0 1px rgb(8, 8, 8));
       }
     </style>
     <header>
-      <p>Movies</p>
-      <p>Series</p>
-      <p>Anime</p>
-      <p>Live TV</p>
+      <div class="brandLogoContainer">
+        <img src="https://i.ibb.co/n0c3gXW/1.png" />
+        <h1>[STREAM]</h1>
+      </div>
     </header>
     <div class="landingPage">
       <div class="backdropContainer">
@@ -277,6 +298,22 @@
       }
     </style>
     <div class="companiesContainer"></div>
+    <style>
+      footer {
+        padding: 10px;
+        color: #e8e8e8;
+        background: #0d0d0d;
+      }
+    </style>
+    <footer>
+      <b> Disclaimer</b>
+      <p>
+        <i>ZXC[STREAM]</i> does not host any files, it merely pulls streams from
+        3rd party services. Legal issues should be taken up with the file hosts
+        and providers. <i>ZXC[STREAM]</i> is not responsible for any media files
+        shown by the video providers.
+      </p>
+    </footer>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
@@ -453,7 +490,6 @@
       backdropImage.classList.add("lazy-load");
 
       posterImage.dataset.src = posterUrl;
-      console.log(posterImage);
       posterImage.alt = title;
       posterImage.classList.add("lazy-load");
 
