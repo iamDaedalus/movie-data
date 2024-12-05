@@ -3,506 +3,286 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>ZXC[STREAM].SITE</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
     />
-    <link
-      href="https://api.fontshare.com/v2/css?f[]=bespoke-stencil@400,500,700&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/movie-style.css" />
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Bespoke Stencil";
-        /* border: 1px solid red; */
-        user-select: none;
-      }
-      body {
-        position: relative;
-        background: #0d0d0d;
-        max-width: 1900px;
-        margin: 0 auto;
-      }
-      body::-webkit-scrollbar {
-        display: none;
-      }
-      #first {
-        height: 85vh;
-        width: 100%;
-        overflow: hidden;
-      }
-
-      .slide-landing {
-        position: relative;
-        height: 95%;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        opacity: 0;
-        transition: opacity 1s, filter 0.5s;
-        filter: blur(10px);
-        cursor: grab;
-      }
-      .slide-landing:active {
-        cursor: grabbing;
-      }
-      .swiper-slide-active {
-        opacity: 1;
-        filter: blur(0);
-      }
-      .slide-landing::before {
-        content: "";
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        background: linear-gradient(0deg, #0d0d0d, #0d0d0d20 60%, #0d0d0de5);
-        z-index: 2;
-      }
-      .backdrop-img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        object-position: center 30%;
-      }
-
-      .pagination-landing-progressbar {
-        position: fixed;
-        top: 0;
-      }
-      .swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
-        background-color: #fb2727; /* Set your desired color */
-        height: 1px;
-      }
-
-      .landing-info {
-        position: absolute;
-        width: 50%;
-        z-index: 5;
-        color: white;
-        left: 50px;
-        bottom: 0;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        gap: 20px;
-        transform: translateY(50%);
-        transition: 0.8s cubic-bezier(0.2, 1, 0.75, 1);
-        opacity: 0;
-        filter: blur(10px);
-      }
-      .swiper-slide-active .landing-info {
-        transform: translateY(0%);
-        opacity: 1;
-        filter: blur(0);
-      }
-
-      .top-ten {
-        position: relative;
-        height: 65vh;
-        max-width: 95%;
-        margin: 0 auto;
-        color: white;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        overflow: hidden;
-      }
-
-      .top-ten-container {
-        position: relative;
-        display: flex;
-        align-items: center;
-        color: white;
-        height: 180px;
-        z-index: 99;
-      }
-      .top-ten-text {
-        position: relative;
-        font-family: sans-serif;
-        font-weight: 800;
-        font-size: 7.5rem;
-        -webkit-text-stroke: 2px rgb(255, 17, 17);
-        -webkit-text-fill-color: transparent;
-      }
-      .top-ten-text::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0df7 90%);
-      }
-      .top-ten-text:nth-child(2),
-      .top-ten-text:nth-child(3),
-      .top-ten-text:nth-child(4),
-      .top-ten-text:nth-child(5) {
-        margin-left: -20px;
-      }
-      .player {
-        display: none;
-        height: 100vh;
-        width: 100%;
-        position: fixed;
-        z-index: 9999;
-        background: red;
-      }
-      .player-active {
-        display: block;
-      }
-
-      .player {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 99999;
-        flex-direction: column;
-      }
-
-      .player-active {
-        display: flex;
-      }
-      #iframe-player {
-        height: 100%;
-        width: 100%;
-        border-radius: 12px;
-      }
-    </style>
   </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      /* border: 1px solid red; */
+      font-family: "Segoe UI";
+      user-select: none;
+    }
+    body::-webkit-scrollbar {
+      display: none;
+    }
+    .landingPage {
+      position: relative;
+      height: 90vh;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .backdropContainer {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      background: hsl(0, 0%, 4%);
+    }
+    .PosterContainer {
+      position: absolute;
+      z-index: 9;
+      width: 50%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      height: 280px;
+      width: 210px;
+    }
+    .backdropImage {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      object-position: center 40%;
+      aspect-ratio: auto;
+    }
 
+    .backdropSlide {
+      position: relative;
+      height: 90%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      filter: blur(10px);
+      transition: 0.5s;
+    }
+    .posterCardSlide {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: 0.5s;
+      transform: scale(0.85);
+
+      filter: blur(10px);
+    }
+    .posterCardSlide.swiper-slide-active {
+      transform: scale(1.1);
+
+      filter: blur(0px);
+    }
+    .posterCardSlide.swiper-slide-prev {
+      transform: scale(0.95);
+      filter: blur(0px);
+    }
+    .posterCardSlide.swiper-slide-next {
+      transform: scale(0.95);
+
+      filter: blur(0px);
+    }
+
+    .backdropSlide.swiper-slide-active {
+      opacity: 1;
+      filter: blur(0);
+    }
+
+    .backdropSlide::after {
+      content: "";
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(0deg, hsl(0, 0%, 4%), hsla(0, 0%, 4%, 0));
+      pointer-events: none;
+      z-index: 1;
+      top: 0;
+      left: 0;
+    }
+
+    .logoImage {
+      height: 150px;
+      width: 40%;
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+    }
+
+    .posterImage {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+    .showDetailContainer {
+      color: white;
+      position: absolute;
+      z-index: 99;
+      bottom: 0;
+      left: 40px;
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      opacity: 0;
+      filter: blur(10px);
+      transform: translateY(30%);
+      transition: 0.5s ease-in-out;
+    }
+    .showDetailContainer h1 {
+      font-size: 3rem;
+    }
+    .showDetailContainer p {
+      font-size: 1.2rem;
+      text-align: justify;
+    }
+
+    .backdropSlide.swiper-slide-active {
+      opacity: 1;
+      filter: blur(0);
+
+      .showDetailContainer {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+      }
+    }
+  </style>
   <body>
-    <div class="player" id="player">
-      <div style="display: flex; justify-content: space-between; width: 100%">
-        <button id="close-player">Close</button>
-        <p style="color: white">Change server if the current is slow</p>
-        <select id="select-server"></select>
-      </div>
-      <iframe
-        id="iframe-player"
-        src=""
-        frameborder="0"
-        allowfullscreen
-      ></iframe>
-    </div>
-    <style>
-      .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        height: 100vh;
-        width: 100%;
-        background: #0d0d0d;
-        z-index: 999;
-        padding: 20px 40px;
-        max-width: 1900px;
-        margin: 0 auto;
-        color: white;
-        gap: 40px;
-      }
-      .modal-active {
-        display: flex;
-      }
-      #poster-container {
-        position: relative;
-
-        width: 35%;
-        height: 100%;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      #poster-container img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-      }
-      #content-container {
-        width: 65%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        overflow: hidden;
-      }
-      #modal-title-container {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .tab-buttons {
-        display: flex;
-        gap: 10px;
-      }
-
-      #modal-info-container {
-        height: 60%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-      }
-
-      .tab-buttons button {
-        padding: 10px;
-        width: 100%;
-        border: 0;
-      }
-      .close-modal {
-        position: absolute;
-        top: 0;
-        right: 0;
-        font-size: 2rem;
-        padding: 0 15px;
-        font-weight: 400;
-        z-index: 99;
-        background: transparent;
-        border: none;
-        color: white;
-      }
-      #poster-wrapper {
-        position: relative;
-        height: 100%;
-        width: 100%;
-        border-radius: 12px;
-        overflow: hidden;
-      }
-
-      .button-active {
-        color: rgb(229, 31, 31);
-      }
-      #episodes-container {
-        height: 100%;
-        width: 100%;
-        overflow-y: auto;
-      }
-      #season-dropdown {
-        width: 100%;
-        padding: 10px;
-      }
-    </style>
-
-    <div id="modal" class="modal">
-      <button class="close-modal">&times;</button>
-      <div id="poster-container">
-        <div id="poster-wrapper"></div>
-      </div>
-      <div id="content-container">
-        <div id="modal-title-container"></div>
-        <div class="tab-buttons">
-          <button id="overview-button">OVERVIEW</button>
-          <button id="episodes-button" style="display: none">EPISODES</button>
-          <button id="trailer-button">TRAILER</button>
-          <button id="more-button">MORE LIKE THIS</button>
-        </div>
-        <div id="modal-info-container"></div>
-      </div>
-    </div>
     <style>
       header {
         position: absolute;
-        z-index: 5;
-        color: white;
-        top: 0;
+        height: 80px;
         width: 100%;
+        color: wheat;
+        z-index: 99;
+        padding: 10px;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: space-between;
+      }
+    </style>
+    <header>
+      <p>Movies</p>
+      <p>Series</p>
+      <p>Anime</p>
+      <p>Live TV</p>
+    </header>
+    <div class="landingPage">
+      <div class="backdropContainer">
+        <div id="backdropWrapper" class="swiper-wrapper"></div>
+      </div>
+      <div class="PosterContainer">
+        <div id="posterWrapper" class="swiper-wrapper"></div>
+      </div>
+    </div>
+    <style>
+      .companiesContainer {
+        min-height: 100vh;
+        width: 100%;
+        background: hsl(0, 0%, 4%);
+        display: flex;
+        flex-direction: column;
+        gap: 100px;
         padding: 10px;
       }
-      .logo-container {
+      .logoCompanyImg {
+        width: 18%;
+      }
+      .companySlide {
         position: relative;
-        height: 60px;
+        height: 230px;
+        width: 400px;
+        color: whitesmoke;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .companySlide img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        transition: 0.3s ease-out;
+      }
+
+      .companySlide:hover img {
+        transform: scale(1.1);
+      }
+
+      .network-section {
+        /* background: red; */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 20px;
+        width: 100%;
+        overflow: hidden;
+      }
+      .companySlide p {
+        position: absolute;
+        bottom: 0;
+        font-size: 1.5rem;
+        padding: 10px;
+      }
+      .swiper-container {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 10px;
       }
-      .logo-title-img {
-        width: 50%;
-        filter: drop-shadow(0 0 3px black);
-      }
-    </style>
-
-    <header>
-      <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>Home</a> -->
-      <div class="logo-container">
-        <img
-          style="height: 100%; width: 100%; object-fit: cover; z-index: 1"
-          src="https://i.ibb.co/n0c3gXW/1.png"
-          alt=""
-        />
-        <h1
-          style="
-            position: absolute;
-            font-size: 2.3rem;
-            opacity: 0.5;
-            letter-spacing: 2px;
-          "
-        >
-          [STREAM]
-        </h1>
-      </div>
-    </header>
-    <div class="swiper-container" id="first">
-      <div class="swiper-wrapper wrapper-landing"></div>
-      <div class="swiper-pagination pagination-landing"></div>
-    </div>
-
-    <style>
-      .wrapper-topten {
-        display: flex;
-        align-items: center;
-        height: calc(100% - 180px);
-        width: 100%;
-        z-index: 99;
-      }
-
-      .slide-topTen {
-        position: relative;
-        height: 220px;
-        width: 400px;
-        filter: blur(5px);
-        transition: filter 0.5s;
-      }
-      .slide-topTen:hover {
-        z-index: 99;
-      }
-      .toptenimg {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        border-radius: 12px;
-        transition: 0.2s;
-        background: rgb(220, 220, 220);
-        box-shadow: 0 0 15px 1px rgb(6, 6, 6);
-      }
-      .slide-topTen:hover .toptenimg {
-        transform: scale(1.06);
-      }
-      .numbering {
-        position: relative;
-        font-family: sans-serif;
-        font-size: 8rem;
-        position: absolute;
-        z-index: -1;
-        left: -55px;
-        bottom: 0;
-        -webkit-text-stroke: 2px rgb(255, 17, 17);
-        -webkit-text-fill-color: transparent;
-        transition: 0.5s;
-        filter: drop-shadow(0 0 2px #0d0d0d);
-      }
-      .slide-topTen:hover .numbering {
-        -webkit-text-fill-color: rgb(255, 17, 17);
-        transform: translateX(-25%) scale(1.1);
-      }
-      .numbering::before {
-        content: "";
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        z-index: 1;
-        background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0df7 80%);
-        transition: 0.5s;
-      }
-      .slide-topTen:hover .numbering::before {
-        background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0df7 95%);
-      }
-      .slide-topTen.swiper-slide-active,
-      .slide-topTen.swiper-slide-prev,
-      .slide-topTen.swiper-slide-next {
-        filter: blur(0);
-      }
-      .onzxcstream {
-        position: relative;
-        font-size: 2.4rem;
-        font-weight: 600;
-        letter-spacing: 3px;
-        word-spacing: 5px;
-        color: #8d0e0e;
-      }
-      .onzxcstream::before {
-        content: "";
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        z-index: 1;
-        background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0d8c 95%);
-      }
-    </style>
-
-    <div id="second" class="top-ten">
-      <div class="top-ten-container">
-        <h1 class="top-ten-text">T</h1>
-        <h1 class="top-ten-text">O</h1>
-        <h1 class="top-ten-text">P</h1>
-        <h1 class="top-ten-text">1</h1>
-        <h1 class="top-ten-text">0</h1>
-        <div class="onzxcstream-container">
-          <p class="onzxcstream">
-            ON <br />
-            Z[STREAM]
-          </p>
-        </div>
-      </div>
-      <div class="swiper-wrapper wrapper-topten"></div>
-    </div>
-    <div style="height: 100vh"></div>
-    <style>
-      @media only screen and (max-width: 700px) {
-        .landing-info {
-          width: 100%;
-          left: 0;
-          padding: 0 20px;
-          justify-content: center;
-          align-items: center;
+      @media only screen and (max-width: 500px) {
+        .landingPage {
+          height: 70vh;
         }
-        * {
-          font-size: 0.8rem;
+        .PosterContainer {
+          display: flex;
         }
 
-        .slide-landing::before {
-          background: linear-gradient(
-            0deg,
-            #0d0d0d 15%,
-            #0d0d0d20 80%,
-            #0d0d0dc3
-          );
+        .backdropSlide {
+          height: 100%;
+          pointer-events: none;
         }
-        .onzxcstream {
-          font-size: 2.5em;
+        .backdropSlide::after {
+          backdrop-filter: blur(10px);
         }
-
-        .slide-topTen {
-          width: 250px;
-          height: 150px;
+        .showDetailContainer p,
+        .showDetailContainer h1,
+        .showDetailContainer img {
+          display: none;
         }
-        .top-ten-text{
-          font-size: 6.5rem;
+        .showDetailContainer i {
+          text-align: center;
+        }
+        .showDetailContainer {
+          left: unset;
+          width: 90%;
+          bottom: 50px;
+        }
+        .logoCompanyImg {
+          width: 30%;
+        }
+        .companySlide {
+          height: 140px;
+          width: 230px;
+        }
+        .companySlide p {
+          font-size: 1rem;
         }
       }
     </style>
+    <div class="companiesContainer"></div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
   <script>
-    const apiKey = "47a1a7df542d3d483227f758a7317dff";
-    const first = document.getElementById("first");
-    const second = document.getElementById("second");
     const showlist = [
+      { id: "945961", media_type: "movie" },
       { id: "1184918", media_type: "movie" },
       { id: "1429", media_type: "tv" },
       { id: "90228", media_type: "tv" },
@@ -517,451 +297,103 @@
       { id: "124364", media_type: "tv" },
       { id: "297608", media_type: "movie" },
     ];
+    const apiKey = "47a1a7df542d3d483227f758a7317dff";
 
-    const wrapper = document.querySelector(".wrapper-landing");
-    const toptenwrapper = document.querySelector(".wrapper-topten");
-
-    async function omsim(showid) {
-      const endpoint = `https://api.themoviedb.org/3/${showid.media_type}/${showid.id}?api_key=${apiKey}`;
-      const logoEndpoint = `https://api.themoviedb.org/3/${showid.media_type}/${showid.id}/images?api_key=${apiKey}&include_image_language=en`;
+    async function logoTitle(showId, mediaType, returnType) {
+      const logoEndpoint = `https://api.themoviedb.org/3/${mediaType}/${showId}/images?api_key=${apiKey}`;
       try {
-        const response = await fetch(endpoint);
-        const responseLogo = await fetch(logoEndpoint);
-
-        if (!response.ok || !responseLogo.ok) {
-          throw new Error("Movie Not Found");
+        const logoResponse = await fetch(logoEndpoint);
+        if (!logoResponse.ok) {
+          throw new Error("meow");
         }
-        const data = await response.json();
-        const datalogo = await responseLogo.json();
+        const logoData = await logoResponse.json();
 
-        const title = data.title || data.name || "Unavailable";
-        const overview = data.overview || "No overview available";
-        const tagline = data.tagline || "";
+        const englishbackdrop = logoData.backdrops.find(
+          (english) => english.iso_639_1 === "en"
+        );
+        const englishbackdropUrl = englishbackdrop
+          ? `https://image.tmdb.org/t/p/w1280/${englishbackdrop.file_path}`
+          : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
+        const logo = logoData.logos.find((logo) => logo.iso_639_1 === "en");
+        const logoUrl = logo
+          ? `https://image.tmdb.org/t/p/w1280/${logo.file_path}`
+          : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
 
-        const logo =
-          datalogo.logos && datalogo.logos.length > 0
-            ? datalogo.logos[0].file_path
-            : null;
-        const titleLogoUrl = logo
-          ? `https://image.tmdb.org/t/p/w500${logo}`
-          : null;
-
-        const backdrop = data.backdrop_path;
-        const backdropUrl = `https://image.tmdb.org/t/p/original/${backdrop}`;
-
-        const slider = document.createElement("div");
-        slider.classList.add("swiper-slide", "slide-landing");
-        slider.innerHTML = `
-              <div class="landing-info">
-              ${
-                titleLogoUrl
-                  ? `<img data-src="${titleLogoUrl}"  class="logo-title-img lazy-load" alt="${title}"/>`
-                  : `<h1>${title}</h1>`
-              }
-               <i>${tagline}</i>
-                <p style="text-align: justify; font-size: 1rem;">${overview}</p>
-
-              </div>
-                ${
-                  backdropUrl
-                    ? `<img data-src="${backdropUrl}" class="backdrop-img lazy-load" alt="${title}"/>`
-                    : ""
-                }
-                `;
-
-        slider.addEventListener("click", () => {
-          modal(showid.media_type, showid.id);
-        });
-
-        wrapper.appendChild(slider);
+        if (returnType === "logo") {
+          return logoUrl;
+        } else if (returnType === "backdrop") {
+          return englishbackdropUrl;
+        } else {
+          throw new Error("Invalid return type specified");
+        }
       } catch (error) {
-        console.error("Error", error.message);
+        console.error(error);
+        return null;
       }
     }
 
-    async function fetchDelay() {
-      for (const showId of showlist) {
-        await omsim(showId);
-        await new Promise((resolve) => setTimeout(resolve, 100));
-      }
-      swiperIni();
-      tamad();
-    }
-
-    async function topten() {
-      const endpoint = `https://api.themoviedb.org/3/trending/all/week?api_key=${apiKey}`;
+    async function fetchShow(showId, mediaType) {
+      const endpoint = `https://api.themoviedb.org/3/${mediaType}/${showId}?api_key=${apiKey}`;
 
       try {
         const response = await fetch(endpoint);
         if (!response.ok) {
-          throw new Error("Movie List Not Found");
+          throw new Error("meow");
         }
         const data = await response.json();
 
-        for (const [index, meow] of data.results.slice(0, 10).entries()) {
-          const number = index + 1;
-          const title = meow.title || meow.name;
-          const mediaType = meow.media_type;
-          const mediaId = meow.id;
-          const backdrop = meow.backdrop_path;
-          const backdropFallback = `https://image.tmdb.org/t/p/original/${backdrop}`;
-          const backdropEndpoint = `https://api.themoviedb.org/3/${mediaType}/${mediaId}/images?api_key=${apiKey}&include_image_language=en`;
-
-          try {
-            const backdropResponse = await fetch(backdropEndpoint);
-            if (!backdropResponse.ok) {
-              throw new Error("Backdrop Not Found");
-            }
-            const backdropData = await backdropResponse.json();
-            const englishBackdrop = backdropData.backdrops.find(
-              (img) => img.iso_639_1 === "en"
-            );
-            const englishBackdropUrl = englishBackdrop
-              ? `https://image.tmdb.org/t/p/original${englishBackdrop.file_path}`
-              : backdropFallback;
-
-            const topTenSlide = document.createElement("div");
-            topTenSlide.classList.add("swiper-slide", "slide-topTen");
-
-            topTenSlide.innerHTML = `
-            <h1 class="numbering">${number}</h1>
-            <img class="toptenimg lazy-load" data-src="${englishBackdropUrl}">
-          `;
-
-            topTenSlide.addEventListener("click", () => {
-              modal(mediaType, mediaId);
-            });
-
-            toptenwrapper.appendChild(topTenSlide);
-          } catch (error) {
-            console.error("Error fetching backdrop:", error.message);
-          }
-        }
-        swiperIni2();
-      } catch (error) {
-        console.error("Error", error.message);
-      }
-    }
-
-    async function modal(mediaType, mediaId) {
-      const apiBase = `https://api.themoviedb.org/3/${mediaType}/${mediaId}`;
-      const endpoint = `${apiBase}?api_key=${apiKey}`;
-      const creditsEndpoint = `${apiBase}/credits?api_key=${apiKey}`;
-
-      try {
-        // Fetching main media details
-        const response = await fetch(endpoint);
-        const creditsResponse = await fetch(creditsEndpoint);
-        if (!response.ok || !creditsResponse.ok) {
-          throw new Error("Movie Not Found");
-        }
-        const data = await response.json();
-        const creditsData = await creditsResponse.json();
-
-        const title = data.title || data.name;
-        const overview = data.overview;
-        const runtime = data.runtime || "";
-        const tagline = data.tagline || "";
-        const genre =
-          data.genres.map((genre) => genre.name).join(", ") || "Unknown";
-        const rating = data.vote_average;
+        const backdrop = data.backdrop_path;
+        const backdropUrl = `https://image.tmdb.org/t/p/original/${backdrop}`;
         const poster = data.poster_path;
-        const posterUrl = `https://image.tmdb.org/t/p/original/${poster}`;
-        const releaseDate = data.release_date || data.first_air_date || "";
-        const releaseYear = releaseDate ? releaseDate.split("-")[0] : "N/A";
-        const cast = creditsData.cast.slice(0, 20);
-        const modal = document.querySelector(".modal");
-        const modalPoster = document.getElementById("poster-wrapper");
-        const contentContainer = document.getElementById("content-container");
-        const modalTitleContainer = document.getElementById(
-          "modal-title-container"
+        const posterUrl = `https://image.tmdb.org/t/p/w1280/${poster}`;
+
+        const logoUrl = await logoTitle(showId, mediaType, "logo");
+        displayshowList(
+          data.title || data.name,
+          data.overview,
+          data.tagline,
+          backdropUrl,
+          posterUrl,
+          logoUrl
         );
-        const modalInfoContainer = document.getElementById(
-          "modal-info-container"
-        );
-        const overviewButton = document.getElementById("overview-button");
-        const episodeButton = document.getElementById("episodes-button");
-        const trailerButton = document.getElementById("trailer-button");
-
-        modal.classList.add("modal-active");
-
-        modalPoster.innerHTML = `<img src="${posterUrl}"/>`;
-        modalTitleContainer.innerHTML = `<h1 style="font-size:3rem; 
-        
-        text-transform: uppercase;">${title}</h1>
-        <div style="display: flex; gap: 15px;">
-        <p>${runtime}</p>|<p>${rating}</p>|<p>
-        ${releaseYear}</p>
-        </div>
-        
-        </p>
-        ${tagline}</p>`;
-        modalInfoContainer.innerHTML = `<p>${overview}</p> </p>
-        ${genre}</p>`;
-        overviewButton.classList.add("button-active");
-
-        const castSwiperContainer = document.createElement("div");
-        castSwiperContainer.id = "third";
-        castSwiperContainer.classList.add("swiper-container");
-        const castContainer = document.createElement("div");
-        castContainer.id = "cast-container";
-        castContainer.classList.add("swiper-wrapper");
-        cast.forEach((actor) => {
-          const actorCard = document.createElement("div");
-          actorCard.classList.add("actor-card", "swiper-slide");
-
-          const actorImg = actor.profile_path
-            ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
-            : "https://via.placeholder.com/100x150?text=No+Image";
-          actorCard.innerHTML = `
-        <img src="${actorImg}" alt="${actor.name}">
-        <p>${actor.name}</p>`;
-
-          modalInfoContainer.appendChild(castSwiperContainer);
-          castSwiperContainer.appendChild(castContainer);
-          castContainer.appendChild(actorCard);
-          swiperActor();
-        });
-
-        if (mediaType === "tv") {
-          episodeButton.style.display = "block";
-          episodeButton.addEventListener("click", () => {
-            episodeButton.classList.add("button-active");
-            trailerButton.classList.remove("button-active");
-            overviewButton.classList.remove("button-active");
-
-            modalInfoContainer.innerHTML = "";
-            const seasonDropDown = document.createElement("select");
-            seasonDropDown.id = "season-dropdown";
-            seasonDropDown.innerHTML = data.seasons
-              .map(
-                (season, index) =>
-                  `<option value="${season.season_number}" ${
-                    season.season_number === 1 || index === 0 ? "selected" : ""
-                  }>${season.name || `Season ${season.season_number}`}</option>`
-              )
-              .join("");
-
-            modalInfoContainer.appendChild(seasonDropDown);
-
-            const episodesContainer = document.createElement("div");
-            episodesContainer.id = "episodes-container";
-            modalInfoContainer.appendChild(episodesContainer);
-
-            // Function to load and display episodes
-            async function loadEpisodes(seasonNumber) {
-              try {
-                const seasonEndpoint = `${apiBase}/season/${seasonNumber}?api_key=${apiKey}`;
-                const seasonResponse = await fetch(seasonEndpoint);
-                const seasonData = await seasonResponse.json();
-
-                episodesContainer.innerHTML = `<h2>${
-                  seasonData.name || `Season ${seasonNumber}`
-                }</h2>`;
-                const episodesList = document.createElement("ul");
-
-                seasonData.episodes.forEach((episode) => {
-                  const episodeItem = document.createElement("li");
-                  episodeItem.style.display = "flex";
-                  episodeItem.style.alignItems = "flex-start";
-                  episodeItem.style.marginBottom = "1rem";
-
-                  const imageUrl = episode.still_path
-                    ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
-                    : "https://via.placeholder.com/300x169?text=No+Image";
-
-                  episodeItem.innerHTML = `
-              <img data-src="${imageUrl}" class="lazy-load" alt="${
-                    episode.name
-                  }" style="width: 150px; height: auto; margin-right: 1rem; border-radius: 5px;" />
-              <div>
-                <strong>E${episode.episode_number} - ${
-                    episode.name
-                  }</strong><br>
-                <p>${episode.overview || "No description available."}</p>
-              </div>
-            `;
-
-                  episodeItem.addEventListener("click", () => {
-                    console.log(
-                      "Clicked episode:",
-                      episode.episode_number,
-                      "Season:",
-                      seasonNumber
-                    );
-                    openIframeModal({
-                      movieId: mediaId,
-                      type: "tv",
-                      seasonNumber1: seasonNumber,
-                      episodeNumber1: episode.episode_number,
-                    });
-                  });
-                  episodesList.appendChild(episodeItem);
-                });
-
-                episodesContainer.appendChild(episodesList);
-              } catch (error) {
-                console.error("Error fetching episodes:", error);
-                episodesContainer.innerHTML =
-                  "<p>Error loading episodes. Please try again.</p>";
-              }
-
-              tamad();
-            }
-
-            // Load the initial season
-            const initialSeason = seasonDropDown.value;
-            loadEpisodes(initialSeason);
-
-            // Add event listener for dropdown changes
-            seasonDropDown.addEventListener("change", (e) => {
-              loadEpisodes(e.target.value);
-            });
-          });
-        }
-
-        // Fetch trailer data
-        const trailerEndpoint = `${apiBase}/videos?api_key=${apiKey}`;
-        const trailerResponse = await fetch(trailerEndpoint);
-        if (!trailerResponse.ok) {
-          throw new Error("Trailer Not Found");
-        }
-        const trailerData = await trailerResponse.json();
-        const trailer = trailerData.results.find(
-          (video) => video.type === "Trailer" && video.site === "YouTube"
-        );
-
-        overviewButton.addEventListener("click", () => {
-          modalInfoContainer.innerHTML = `<p>${overview}</p><p>${genre}</p>`;
-
-          const castSwiperContainer = document.createElement("div");
-          castSwiperContainer.id = "third";
-          castSwiperContainer.classList.add("swiper-container");
-          const castContainer = document.createElement("div");
-          castContainer.id = "cast-container";
-          castContainer.classList.add("swiper-wrapper");
-          cast.forEach((actor) => {
-            const actorCard = document.createElement("div");
-            actorCard.classList.add("actor-card", "swiper-slide");
-
-            const actorImg = actor.profile_path
-              ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
-              : "https://via.placeholder.com/100x150?text=No+Image";
-            actorCard.innerHTML = `
-        <img src="${actorImg}" alt="${actor.name}">
-        <p>${actor.name}</p>`;
-
-            modalInfoContainer.appendChild(castSwiperContainer);
-            castSwiperContainer.appendChild(castContainer);
-            castContainer.appendChild(actorCard);
-            swiperActor();
-          });
-
-          overviewButton.classList.add("button-active");
-          trailerButton.classList.remove("button-active");
-          episodeButton.classList.remove("button-active");
-        });
-
-        if (trailer) {
-          trailerButton.addEventListener("click", () => {
-            modalInfoContainer.innerHTML = "";
-            const iframe = document.createElement("iframe");
-            iframe.src = `https://www.youtube.com/embed/${trailer.key}`;
-            iframe.width = "100%";
-            iframe.height = "100%";
-            iframe.frameborder = "0";
-            iframe.allow =
-              "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-            iframe.allowfullscreen = true;
-            modalInfoContainer.appendChild(iframe);
-
-            trailerButton.classList.add("button-active");
-            overviewButton.classList.remove("button-active");
-            episodeButton.classList.remove("button-active");
-          });
-        } else {
-          trailerButton.innerText = "(TRAILER UNAVAILABLE)";
-          trailerButton.setAttribute("disabled", "");
-        }
-
-        document.querySelector(".close-modal").addEventListener("click", () => {
-          modal.classList.remove("modal-active");
-
-          // Reset modal content
-          modalPoster.innerHTML = "";
-          modalInfoContainer.innerHTML = "";
-          modalTitleContainer.innerHTML = "";
-          trailerButton.innerText = "TRAILER";
-          trailerButton.removeAttribute("disabled");
-          episodeButton.classList.remove("button-active");
-          overviewButton.classList.remove("button-active");
-          trailerButton.classList.remove("button-active");
-          episodeButton.style.display = "none";
-
-          // Clean up season dropdown and episodes container
-          const seasonDropDown = document.getElementById("season-dropdown");
-          const episodesContainer =
-            document.getElementById("episodes-container");
-
-          if (seasonDropDown) {
-            seasonDropDown.remove(); // Remove the dropdown element
-          }
-          if (episodesContainer) {
-            episodesContainer.remove(); // Remove the episodes container
-          }
-        });
-
-        modalPoster.addEventListener("click", () => {
-          const movieId = mediaId; // Current media ID
-          const type = mediaType; // Current media type
-          const seasonNumber =
-            document.getElementById("season-dropdown")?.value || null;
-          const episodeNumber =
-            document.querySelector("#episodes-container li.selected")?.dataset
-              .episodeNumber || null;
-
-          // Open the iframe modal with the data
-          openIframeModal({ movieId, type, seasonNumber, episodeNumber });
-        });
       } catch (error) {
         console.error(error);
       }
     }
 
-    function swiperIni() {
-      const swiper = new Swiper("#first", {
-        slidesPerView: 1,
+    async function showlistLoop() {
+      for (const meow of showlist) {
+        await fetchShow(meow.id, meow.media_type);
+        await new Promise((resolve) => setTimeout(resolve, 10));
+      }
+      initSwipers();
+      tamad();
+    }
+
+    function initSwipers() {
+      // Initialize the backdrop swiper
+      const backdropSwiper = new Swiper(".backdropContainer", {
+        slidesPerView: "auto",
         loop: true,
-        pagination: {
-          el: ".pagination-landing",
-          clickable: true,
-          type: "progressbar",
-        },
         autoplay: {
           delay: 5000,
         },
       });
-    }
 
-    function swiperIni2() {
-      const swiper2 = new Swiper("#second", {
-        slidesPerView: "auto",
-        loop: false,
-        centeredSlides: true,
-        initialSlide: 1, // Start from the second slide
-        spaceBetween: 52,
-        mousewheel: false, // Enable mousewheel control
-      });
-    }
+      // Initialize the poster swiper
+      const posterSwiper = new Swiper(".PosterContainer", {
+        slidesPerView: "1",
+        loop: true,
+        spaceBetween: 20,
+        centeredSlides: "true",
 
-    function swiperActor() {
-      const swiper3 = new Swiper("#third", {
-        slidesPerView: "auto",
-        loop: false,
-        centeredSlides: false,
-        spaceBetween: 10,
-        mousewheel: false, // Enable mousewheel control
+        controller: {
+          control: backdropSwiper, // Link to the backdrop swiper
+        },
       });
+
+      // Link the controller in both directions
+      backdropSwiper.controller.control = posterSwiper;
     }
 
     function tamad() {
@@ -986,48 +418,199 @@
       });
     }
 
-    function openIframeModal({ movieId, type, seasonNumber1, episodeNumber1 }) {
-      seasonNumber1 = seasonNumber1 ? seasonNumber1 : "1";
-      episodeNumber1 = episodeNumber1 ? episodeNumber1 : "1";
-      const player = document.getElementById("player");
-      player.classList.add("player-active");
+    function displayshowList(
+      title,
+      overview,
+      tagline,
+      backdropUrl,
+      posterUrl,
+      logoUrl
+    ) {
+      const backdropWrapper = document.getElementById("backdropWrapper");
+      const posterWrapper = document.getElementById("posterWrapper");
+      const backdropSlide = document.createElement("div");
+      backdropSlide.className = "swiper-slide backdropSlide";
+      const posterSlide = document.createElement("div");
+      posterSlide.className = "swiper-slide";
+      const backdropImage = document.createElement("img");
+      backdropImage.className = "backdropImage";
+      const posterImage = document.createElement("img");
+      posterImage.className = "posterImage";
+      const showDetailContainer = document.createElement("div");
+      showDetailContainer.className = "showDetailContainer";
+      const logoImage = document.createElement("img");
+      logoImage.className = "logoImage";
+      const showTitle = document.createElement("h1");
+      const showTagline = document.createElement("i");
+      const showOverview = document.createElement("p");
+      const posterCardSlide = document.createElement("div");
+      posterCardSlide.className = "posterCardSlide";
+      posterCardSlide.classList.add("swiper-slide");
 
-      const selectServer = document.getElementById("select-server");
-      const iframePlayer = document.getElementById("iframe-player");
-      selectServer.innerHTML = "";
-      const serverList = [
-        {
-          name: "Server 1",
-          linkMovie: `https://embed.su/embed/movie/${movieId}`,
-          linkTv: `https://embed.su/embed/tv/${movieId}/${seasonNumber1}/${episodeNumber1}`,
-        },
-        {
-          name: "Server 2",
-          linkMovie: `https://vidlink.pro/movie/${movieId}`,
-          linkTv: `https://vidlink.pro/tv/${movieId}/${seasonNumber1}/${episodeNumber1}`,
-        },
-      ];
+      backdropImage.src = "https://via.placeholder.com/1280x720";
+      backdropImage.dataset.src = backdropUrl;
+      backdropImage.alt = title;
+      backdropImage.classList.add("lazy-load");
 
-      serverList.forEach((server) => {
-        const option = document.createElement("option");
-        option.value = type === "movie" ? server.linkMovie : server.linkTv;
-        option.textContent = server.name;
-        selectServer.appendChild(option);
+      posterImage.dataset.src = posterUrl;
+      console.log(posterImage);
+      posterImage.alt = title;
+      posterImage.classList.add("lazy-load");
+
+      logoImage.dataset.src = logoUrl;
+      logoImage.alt = title;
+      logoImage.classList.add("lazy-load");
+
+      showTitle.innerText = title;
+      showTagline.innerText = tagline;
+      showOverview.innerText = overview;
+      posterCardSlide.appendChild(posterImage);
+      posterWrapper.appendChild(posterCardSlide);
+      showDetailContainer.appendChild(logoImage);
+      showDetailContainer.appendChild(showTagline);
+      showDetailContainer.appendChild(showTitle);
+      showDetailContainer.appendChild(showOverview);
+      backdropSlide.appendChild(showDetailContainer);
+      backdropSlide.appendChild(backdropImage);
+      backdropWrapper.appendChild(backdropSlide);
+    }
+
+    const companies = [
+      {
+        networkId: "213",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png",
+      },
+      {
+        networkId: "1024",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg",
+      },
+      {
+        networkId: "3186",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg",
+      },
+      {
+        networkId: "2739",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg",
+      },
+      {
+        networkId: "2552",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/2/28/Apple_TV_Plus_Logo.svg",
+      },
+      {
+        networkId: "4330",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/e/ea/Paramount%2B_logo.png",
+      },
+    ];
+
+    async function companiesLoop() {
+      for (const company of companies) {
+        await fetchCompanies(company.networkId, company.logoLink);
+        await new Promise((resolve) => setTimeout(resolve, 10));
+      }
+    }
+
+    async function fetchCompanies(networkId, networkLogoLink) {
+      const mediaType = "tv";
+      const endpoint = `https://api.themoviedb.org/3/discover/${mediaType}?api_key=${apiKey}&with_networks=${networkId}`;
+
+      try {
+        const response = await fetch(endpoint);
+        if (!response.ok) {
+          throw new Error("Error fetching network data");
+        }
+        const data = await response.json();
+
+        const series = await Promise.all(
+          data.results.map(async (seriesItem) => {
+            const englishBackdropUrl = await logoTitle(
+              seriesItem.id,
+              mediaType,
+              "backdrop"
+            );
+            return {
+              name: seriesItem.name,
+              backdropUrl: englishBackdropUrl,
+            };
+          })
+        );
+
+        displayCompanies(networkId, networkLogoLink, series);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function displayCompanies(networkId, logoLink, series) {
+      const companiesContainer = document.querySelector(".companiesContainer");
+
+      // Create network section
+      const networkSection = document.createElement("div");
+      networkSection.classList.add("network-section");
+
+      // Add network logo
+      const logoImg = document.createElement("img");
+      logoImg.className = "logoCompanyImg";
+      logoImg.dataset.src = logoLink;
+      logoImg.alt = "Network Logo";
+      logoImg.classList.add("lazy-load");
+
+      // Create Swiper container
+      const swiperContainer = document.createElement("div");
+      swiperContainer.classList.add("swiper-container");
+      swiperContainer.id = `swiper-${networkId}`;
+
+      const swiperWrapper = document.createElement("div");
+      swiperWrapper.classList.add("swiper-wrapper");
+
+      // Populate Swiper with series
+      series.forEach((seriesItem) => {
+        if (seriesItem.backdropUrl) {
+          const swiperSlide = document.createElement("div");
+          swiperSlide.className = "companySlide";
+          swiperSlide.classList.add("swiper-slide");
+
+          const backdropImg = document.createElement("img");
+          backdropImg.dataset.src = seriesItem.backdropUrl;
+          backdropImg.alt = seriesItem.name;
+          backdropImg.classList.add("lazy-load");
+
+          const seriesName = document.createElement("p");
+          seriesName.textContent = seriesItem.name;
+
+          swiperSlide.appendChild(backdropImg);
+          swiperSlide.appendChild(seriesName);
+          swiperWrapper.appendChild(swiperSlide);
+        }
       });
 
-      iframePlayer.src = selectServer.options[0]?.value || "";
+      swiperContainer.appendChild(swiperWrapper);
+      networkSection.appendChild(logoImg);
+      networkSection.appendChild(swiperContainer);
+      companiesContainer.appendChild(networkSection);
 
-      selectServer.addEventListener("change", () => {
-        iframePlayer.src = selectServer.value;
-      });
-
-      document.getElementById("close-player").addEventListener("click", () => {
-        player.classList.remove("player-active");
-        iframePlayer.src = "";
+      // Initialize Swiper
+      new Swiper(`#swiper-${networkId}`, {
+        slidesPerView: "auto",
+        spaceBetween: 20,
+        loop: true,
+        navigation: {
+          nextEl: `.swiper-button-next-${networkId}`,
+          prevEl: `.swiper-button-prev-${networkId}`,
+        },
+        pagination: {
+          el: `.swiper-pagination-${networkId}`,
+          clickable: true,
+        },
       });
     }
 
-    fetchDelay();
-    topten();
+    showlistLoop();
+    companiesLoop();
   </script>
 </html>
