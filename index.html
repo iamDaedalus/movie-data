@@ -22,7 +22,7 @@
     if (Hls.isSupported()) {
       var video = document.getElementById('video');
       var hls = new Hls();
-      hls.loadSource('https://tralvoxmoon.xyz/file2/2ue6j8AbeB6YfIq6+MMJtdvBqd1006G8hKewjBMCSRecYtDPREXxWeWN0lQp2fnm~JtXqWnNOH6CFc0EIyDQ4~rRU5oB~rOnLopdhvCtqGfcP9Ek3UeuaHRSnpwVi4fispN~b2zR+izpZtY09rd3R031rk6FSqOTpTghp7wOpwU=/cGxheWxpc3QubTN1OA==.m3u8');
+      hls.loadSource('https://tralvoxmoon.xyz/file2/2ue6j8AbeB6YfIq6+MMJtdvBqd1006G8hKewjBMCSRecYtDPREXxWeWN0lQp2fnm~JtXqWnNOH6CFc0EIyDQ4~rRU5oB~rOnLopdhvCtqGfcP9Ek3UeuaHRSnpwVi4fispN~b2zR+izpZtY09rd3R031rk6FSqOTpTghp7wOpwU=/MTA4MA==/aW5kZXgubTN1OA==.m3u8');
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, function () {
         video.play();
@@ -108,7 +108,7 @@
       }
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       // Native HLS support (Safari)
-      video.src = 'https://tralvoxmoon.xyz/file2/2ue6j8AbeB6YfIq6+MMJtdvBqd1006G8hKewjBMCSRecYtDPREXxWeWN0lQp2fnm~JtXqWnNOH6CFc0EIyDQ4~rRU5oB~rOnLopdhvCtqGfcP9Ek3UeuaHRSnpwVi4fispN~b2zR+izpZtY09rd3R031rk6FSqOTpTghp7wOpwU=/cGxheWxpc3QubTN1OA==.m3u8';
+      video.src = 'https://tralvoxmoon.xyz/file2/2ue6j8AbeB6YfIq6+MMJtdvBqd1006G8hKewjBMCSRecYtDPREXxWeWN0lQp2fnm~JtXqWnNOH6CFc0EIyDQ4~rRU5oB~rOnLopdhvCtqGfcP9Ek3UeuaHRSnpwVi4fispN~b2zR+izpZtY09rd3R031rk6FSqOTpTghp7wOpwU=/MTA4MA==/aW5kZXgubTN1OA==.m3u8';
       video.play();
 
       // Native subtitle display and time tracking (if needed)
