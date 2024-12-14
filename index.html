@@ -1,657 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ZXC[STREAM].SITE</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
-    />
-  </head>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      /* border: 1px solid red; */
-      font-family: "Segoe UI";
-      user-select: none;
-    }
-    body::-webkit-scrollbar {
-      display: none;
-    }
-    .landingPage {
-      position: relative;
-      height: 90vh;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
-    .backdropContainer {
-      position: relative;
-      height: 100%;
-      width: 100%;
-      background: hsl(0, 0%, 4%);
-    }
-    .PosterContainer {
-      position: absolute;
-      z-index: 9;
-      width: 50%;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      height: 280px;
-      width: 210px;
-      box-shadow: 0 0 3px 2px black;
-      background: black;
-      border-radius: 12px;
-    }
-    .backdropImage {
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
-      object-position: center 40%;
-      aspect-ratio: auto;
-    }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stream M3U8 with Subtitles</title>
+</head>
+<body>
 
-    .backdropSlide {
-      position: relative;
-      height: 90%;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      filter: blur(10px);
-      transition: 0.5s;
-    }
-    .posterCardSlide {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-      width: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      transition: 0.5s;
-      transform: scale(0.85);
-      filter: blur(10px);
-    }
-    .posterCardSlide.swiper-slide-active {
-      transform: scale(1.1);
+  <h1>Stream M3U8 with HLS.js</h1>
 
-      filter: blur(0px);
-    }
-    .posterCardSlide.swiper-slide-prev {
-      transform: scale(0.95);
-      filter: blur(0px);
-    }
-    .posterCardSlide.swiper-slide-next {
-      transform: scale(0.95);
+  <video id="video" controls width="640" height="360">
+    <!-- The video will be injected here -->
+  </video>
 
-      filter: blur(0px);
-    }
+  <input type="file" id="subtitle-file" accept=".srt" />
+  <p>Current Time: <span id="current-time">0:00</span> (minutes)</p>
+  <div id="subtitle-container"></div>
 
-    .backdropSlide.swiper-slide-active {
-      opacity: 1;
-      filter: blur(0);
-    }
-
-    .backdropSlide::after {
-      content: "";
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(0deg, hsl(0, 0%, 4%), hsla(0, 0%, 4%, 0));
-      pointer-events: none;
-      z-index: 1;
-      top: 0;
-      left: 0;
-    }
-
-    .logoImage {
-      height: 150px;
-      width: 40%;
-      aspect-ratio: 16 / 9;
-      object-fit: contain;
-    }
-
-    .posterImage {
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
-    }
-    .showDetailContainer {
-      color: white;
-      position: absolute;
-      z-index: 99;
-      bottom: 0;
-      left: 40px;
-      width: 80%;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      opacity: 0;
-      filter: blur(10px);
-      transform: translateY(30%);
-      transition: 0.5s ease-in-out;
-    }
-    .showDetailContainer h1 {
-      font-size: 3rem;
-    }
-    .showDetailContainer p {
-      font-size: 1.2rem;
-      text-align: justify;
-    }
-
-    .backdropSlide.swiper-slide-active {
-      opacity: 1;
-      filter: blur(0);
-
-      .showDetailContainer {
-        opacity: 1;
-        filter: blur(0);
-        transform: translateY(0);
-      }
-    }
-  </style>
-  <body>
-    <div class="modal">
-
-    </div>
-    <style>
-      header {
-        position: fixed;
-        height: 60px;
-        width: 100%;
-        color: whitesmoke;
-        z-index: 99;
-        padding: 10px;
-        display: flex;
-        justify-content: center;
-      }
-
-      .brandLogoContainer {
-        position: relative;
-        width: 300px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .brandLogoContainer img {
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        object-fit: contain;
-        z-index: 1;
-      }
-      .brandLogoContainer h1 {
-        position: absolute;
-        font-size: 2rem;
-        opacity: 0.5;
-        letter-spacing: 2px;
-        filter: drop-shadow(0 0 1px rgb(8, 8, 8));
-      }
-    </style>
-    <header>
-      <div class="brandLogoContainer">
-        <img src="https://i.ibb.co/n0c3gXW/1.png" />
-        <h1>[STREAM]</h1>
-      </div>
-    </header>
-    <div class="landingPage">
-      <div class="backdropContainer">
-        <div id="backdropWrapper" class="swiper-wrapper"></div>
-      </div>
-      <div class="PosterContainer">
-        <div id="posterWrapper" class="swiper-wrapper"></div>
-      </div>
-    </div>
-    <style>
-      .companiesContainer {
-        min-height: 100vh;
-        width: 100%;
-        background: hsl(0, 0%, 4%);
-        display: flex;
-        flex-direction: column;
-        gap: 100px;
-        padding: 10px;
-      }
-      .logoCompanyImg {
-        width: 18%;
-      }
-      .companySlide {
-        position: relative;
-        height: 230px;
-        width: 400px;
-        color: whitesmoke;
-        border-radius: 12px;
-        overflow: hidden;
-      }
-      .companySlide img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        transition: 0.3s ease-out;
-      }
-
-      .companySlide:hover img {
-        transform: scale(1.1);
-      }
-
-      .network-section {
-        /* background: red; */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 20px;
-        width: 100%;
-        overflow: hidden;
-      }
-      .companySlide p {
-        position: absolute;
-        bottom: 0;
-        font-size: 1.5rem;
-        padding: 10px;
-      }
-      .swiper-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-      @media only screen and (max-width: 500px) {
-        .landingPage {
-          height: 70vh;
-        }
-        .PosterContainer {
-          display: flex;
-        }
-
-        .backdropSlide {
-          height: 100%;
-          pointer-events: none;
-        }
-        .backdropSlide::after {
-          backdrop-filter: blur(10px);
-        }
-        .showDetailContainer p,
-        .showDetailContainer h1,
-        .showDetailContainer img {
-          display: none;
-        }
-        .showDetailContainer i {
-          text-align: center;
-        }
-        .showDetailContainer {
-          left: unset;
-          width: 90%;
-          bottom: 50px;
-        }
-        .logoCompanyImg {
-          width: 30%;
-        }
-        .companySlide {
-          height: 140px;
-          width: 230px;
-        }
-        .companySlide p {
-          font-size: 1rem;
-        }
-      }
-    </style>
-    <div class="companiesContainer"></div>
-    <style>
-      footer {
-        padding: 10px;
-        color: #e8e8e8;
-        background: #0d0d0d;
-      }
-    </style>
-    <footer>
-      <b> Disclaimer</b>
-      <p>
-        <i>ZXC[STREAM]</i> does not host any files, it merely pulls streams from
-        3rd party services. Legal issues should be taken up with the file hosts
-        and providers. <i>ZXC[STREAM]</i> is not responsible for any media files
-        shown by the video providers.
-      </p>
-    </footer>
-  </body>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script>
-    const showlist = [
-      { id: "945961", media_type: "movie" },
-      { id: "256274", media_type: "movie" },
-      { id: "170", media_type: "movie" },
-      { id: "744857", media_type: "movie" },
-      { id: "913290", media_type: "movie" },
-      { id: "591274", media_type: "movie" },
-      { id: "85552", media_type: "tv" },
-      { id: "94605", media_type: "tv" },
-      { id: "1100782", media_type: "movie" },
-      { id: "402431", media_type: "movie" },
-      { id: "1290486", media_type: "movie" },
-      { id: "1184918", media_type: "movie" },
-      { id: "297608", media_type: "movie" },
-    ];
-    const apiKey = "47a1a7df542d3d483227f758a7317dff";
-
-    async function logoTitle(showId, mediaType, returnType) {
-      const logoEndpoint = `https://api.themoviedb.org/3/${mediaType}/${showId}/images?api_key=${apiKey}`;
-      try {
-        const logoResponse = await fetch(logoEndpoint);
-        if (!logoResponse.ok) {
-          throw new Error("meow");
-        }
-        const logoData = await logoResponse.json();
-
-        const englishbackdrop = logoData.backdrops.find(
-          (english) => english.iso_639_1 === "en"
-        );
-        const englishbackdropUrl = englishbackdrop
-          ? `https://image.tmdb.org/t/p/w1280/${englishbackdrop.file_path}`
-          : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
-        const logo = logoData.logos.find((logo) => logo.iso_639_1 === "en");
-        const logoUrl = logo
-          ? `https://image.tmdb.org/t/p/w1280/${logo.file_path}`
-          : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
-
-        if (returnType === "logo") {
-          return logoUrl;
-        } else if (returnType === "backdrop") {
-          return englishbackdropUrl;
-        } else {
-          throw new Error("Invalid return type specified");
-        }
-      } catch (error) {
-        console.error(error);
-        return null;
-      }
-    }
-
-    async function fetchShow(showId, mediaType) {
-      const endpoint = `https://api.themoviedb.org/3/${mediaType}/${showId}?api_key=${apiKey}`;
-
-      try {
-        const response = await fetch(endpoint);
-        if (!response.ok) {
-          throw new Error("meow");
-        }
-        const data = await response.json();
-
-        const backdrop = data.backdrop_path;
-        const backdropUrl = `https://image.tmdb.org/t/p/original/${backdrop}`;
-        const poster = data.poster_path;
-        const posterUrl = `https://image.tmdb.org/t/p/w1280/${poster}`;
-
-        const logoUrl = await logoTitle(showId, mediaType, "logo");
-        displayshowList(
-          data.title || data.name,
-          data.overview,
-          data.tagline,
-          backdropUrl,
-          posterUrl,
-          logoUrl
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    async function showlistLoop() {
-      for (const meow of showlist) {
-        await fetchShow(meow.id, meow.media_type);
-        await new Promise((resolve) => setTimeout(resolve, 30));
-      }
-      initSwipers();
-      tamad();
-    }
-
-    function initSwipers() {
-      // Initialize the backdrop swiper
-      const backdropSwiper = new Swiper(".backdropContainer", {
-        slidesPerView: "auto",
-        loop: true,
-        autoplay: {
-          delay: 5000,
-        },
+    if (Hls.isSupported()) {
+      var video = document.getElementById('video');
+      var hls = new Hls();
+      hls.loadSource('https://tralvoxmoon.xyz/file2/2ue6j8AbeB6YfIq6+MMJtdvBqd1006G8hKewjBMCSRecYtDPREXxWeWN0lQp2fnm~JtXqWnNOH6CFc0EIyDQ4~rRU5oB~rOnLopdhvCtqGfcP9Ek3UeuaHRSnpwVi4fispN~b2zR+izpZtY09rd3R031rk6FSqOTpTghp7wOpwU=/cGxheWxpc3QubTN1OA==.m3u8');
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        video.play();
       });
 
-      // Initialize the poster swiper
-      const posterSwiper = new Swiper(".PosterContainer", {
-        slidesPerView: "1",
-        loop: true,
-        spaceBetween: 20,
-        centeredSlides: "true",
+      var subtitles = [];
+      var subtitleContainer = document.getElementById('subtitle-container');
 
-        controller: {
-          control: backdropSwiper, // Link to the backdrop swiper
-        },
+      // Load subtitle file
+      document.getElementById('subtitle-file').addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (file && file.name.endsWith('.srt')) {
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            var srtText = event.target.result;
+            subtitles = parseSRT(srtText);
+          };
+          reader.readAsText(file);
+        }
       });
 
-      // Link the controller in both directions
-      backdropSwiper.controller.control = posterSwiper;
-    }
+      // Parse SRT subtitles
+      function parseSRT(srtText) {
+        var lines = srtText.split('\n');
+        var parsedSubtitles = [];
+        var subtitle = {};
+        var timeRegex = /(\d{2}):(\d{2}):(\d{2}),(\d{3}) --> (\d{2}):(\d{2}):(\d{2}),(\d{3})/;
 
-    function tamad() {
-      const tamadpiktur = document.querySelectorAll("img.lazy-load");
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].trim();
+          
+          if (line.match(/^\d+$/)) {
+            // Subtitle index, do nothing
+            continue;
+          }
 
-      const observer = new IntersectionObserver(
-        (entries, observer) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const img = entry.target;
-              img.src = img.dataset.src;
-              img.classList.remove("lazy-load");
-              observer.unobserve(img);
+          var timeMatch = line.match(timeRegex);
+          if (timeMatch) {
+            // Parsing time range
+            var start = toSeconds(timeMatch[1], timeMatch[2], timeMatch[3], timeMatch[4]);
+            var end = toSeconds(timeMatch[5], timeMatch[6], timeMatch[7], timeMatch[8]);
+            subtitle.start = start;
+            subtitle.end = end;
+          } else if (line === '') {
+            // Empty line, finalize current subtitle
+            if (subtitle.text) {
+              parsedSubtitles.push(subtitle);
             }
-          });
-        },
-        { threshold: 0.01 }
-      );
-
-      tamadpiktur.forEach((Image) => {
-        observer.observe(Image);
-      });
-    }
-
-    function displayshowList(
-      title,
-      overview,
-      tagline,
-      backdropUrl,
-      posterUrl,
-      logoUrl
-    ) {
-      const backdropWrapper = document.getElementById("backdropWrapper");
-      const posterWrapper = document.getElementById("posterWrapper");
-      const backdropSlide = document.createElement("div");
-      backdropSlide.className = "swiper-slide backdropSlide";
-      const posterSlide = document.createElement("div");
-      posterSlide.className = "swiper-slide";
-      const backdropImage = document.createElement("img");
-      backdropImage.className = "backdropImage";
-      const posterImage = document.createElement("img");
-      posterImage.className = "posterImage";
-      const showDetailContainer = document.createElement("div");
-      showDetailContainer.className = "showDetailContainer";
-      const logoImage = document.createElement("img");
-      logoImage.className = "logoImage";
-      const showTitle = document.createElement("h1");
-      const showTagline = document.createElement("i");
-      const showOverview = document.createElement("p");
-      const posterCardSlide = document.createElement("div");
-      posterCardSlide.className = "posterCardSlide";
-      posterCardSlide.classList.add("swiper-slide");
-
-      backdropImage.src = "https://via.placeholder.com/1280x720";
-      backdropImage.dataset.src = backdropUrl;
-      backdropImage.alt = title;
-      backdropImage.classList.add("lazy-load");
-
-      posterImage.dataset.src = posterUrl;
-      posterImage.alt = title;
-      posterImage.classList.add("lazy-load");
-
-      logoImage.dataset.src = logoUrl;
-      logoImage.alt = title;
-      logoImage.classList.add("lazy-load");
-
-      showTitle.innerText = title;
-      showTagline.innerText = tagline;
-      showOverview.innerText = overview;
-      posterCardSlide.appendChild(posterImage);
-      posterWrapper.appendChild(posterCardSlide);
-      showDetailContainer.appendChild(logoImage);
-      showDetailContainer.appendChild(showTagline);
-      showDetailContainer.appendChild(showTitle);
-      showDetailContainer.appendChild(showOverview);
-      backdropSlide.appendChild(showDetailContainer);
-      backdropSlide.appendChild(backdropImage);
-      backdropWrapper.appendChild(backdropSlide);
-    }
-
-    const companies = [
-      {
-        networkId: "213",
-        logoLink:
-          "https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png",
-      },
-      {
-        networkId: "1024",
-        logoLink:
-          "https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg",
-      },
-      {
-        networkId: "3186",
-        logoLink:
-          "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg",
-      },
-      {
-        networkId: "2739",
-        logoLink:
-          "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg",
-      },
-      {
-        networkId: "2552",
-        logoLink:
-          "https://upload.wikimedia.org/wikipedia/commons/2/28/Apple_TV_Plus_Logo.svg",
-      },
-      {
-        networkId: "4330",
-        logoLink:
-          "https://upload.wikimedia.org/wikipedia/commons/e/ea/Paramount%2B_logo.png",
-      },
-    ];
-
-    async function companiesLoop() {
-      for (const company of companies) {
-        await fetchCompanies(company.networkId, company.logoLink);
-        await new Promise((resolve) => setTimeout(resolve, 30));
-      }
-    }
-
-    async function fetchCompanies(networkId, networkLogoLink) {
-      const mediaType = "tv";
-      const endpoint = `https://api.themoviedb.org/3/discover/${mediaType}?api_key=${apiKey}&with_networks=${networkId}`;
-
-      try {
-        const response = await fetch(endpoint);
-        if (!response.ok) {
-          throw new Error("Error fetching network data");
+            subtitle = {};
+          } else {
+            // Add subtitle text
+            subtitle.text = subtitle.text ? subtitle.text + '\n' + line : line;
+          }
         }
-        const data = await response.json();
-
-        const series = await Promise.all(
-          data.results.map(async (seriesItem) => {
-            const englishBackdropUrl = await logoTitle(
-              seriesItem.id,
-              mediaType,
-              "backdrop"
-            );
-            return {
-              name: seriesItem.name,
-              backdropUrl: englishBackdropUrl,
-            };
-          })
-        );
-
-        displayCompanies(networkId, networkLogoLink, series);
-      } catch (error) {
-        console.error(error);
+        return parsedSubtitles;
       }
-    }
 
-    function displayCompanies(networkId, logoLink, series) {
-      const companiesContainer = document.querySelector(".companiesContainer");
+      // Convert time to seconds
+      function toSeconds(hour, minute, second, millisecond) {
+        return parseInt(hour) * 3600 + parseInt(minute) * 60 + parseInt(second) + parseInt(millisecond) / 1000;
+      }
 
-      // Create network section
-      const networkSection = document.createElement("div");
-      networkSection.classList.add("network-section");
+      // Display subtitles based on current time
+      video.ontimeupdate = function () {
+        var currentTimeInSeconds = video.currentTime;
+        var currentTimeInMinutes = Math.floor(currentTimeInSeconds / 60);
+        var currentTimeInSecondsMod = Math.floor(currentTimeInSeconds % 60);
+        document.getElementById('current-time').textContent = currentTimeInMinutes + ':' + (currentTimeInSecondsMod < 10 ? '0' + currentTimeInSecondsMod : currentTimeInSecondsMod);
 
-      // Add network logo
-      const logoImg = document.createElement("img");
-      logoImg.className = "logoCompanyImg";
-      logoImg.dataset.src = logoLink;
-      logoImg.alt = "Network Logo";
-      logoImg.classList.add("lazy-load");
-
-      // Create Swiper container
-      const swiperContainer = document.createElement("div");
-      swiperContainer.classList.add("swiper-container");
-      swiperContainer.id = `swiper-${networkId}`;
-
-      const swiperWrapper = document.createElement("div");
-      swiperWrapper.classList.add("swiper-wrapper");
-
-      // Populate Swiper with series
-      series.forEach((seriesItem) => {
-        if (seriesItem.backdropUrl) {
-          const swiperSlide = document.createElement("div");
-          swiperSlide.className = "companySlide";
-          swiperSlide.classList.add("swiper-slide");
-
-          const backdropImg = document.createElement("img");
-          backdropImg.dataset.src = seriesItem.backdropUrl;
-          backdropImg.alt = seriesItem.name;
-          backdropImg.classList.add("lazy-load");
-
-          const seriesName = document.createElement("p");
-          seriesName.textContent = seriesItem.name;
-
-          swiperSlide.appendChild(backdropImg);
-          swiperSlide.appendChild(seriesName);
-          swiperWrapper.appendChild(swiperSlide);
+        var currentSubtitle = getCurrentSubtitle(currentTimeInSeconds);
+        if (currentSubtitle) {
+          subtitleContainer.textContent = currentSubtitle.text;
+        } else {
+          subtitleContainer.textContent = ''; // No subtitle
         }
-      });
+      };
 
-      swiperContainer.appendChild(swiperWrapper);
-      networkSection.appendChild(logoImg);
-      networkSection.appendChild(swiperContainer);
-      companiesContainer.appendChild(networkSection);
+      // Get subtitle based on current time
+      function getCurrentSubtitle(currentTime) {
+        return subtitles.find(function(subtitle) {
+          return currentTime >= subtitle.start && currentTime <= subtitle.end;
+        });
+      }
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Native HLS support (Safari)
+      video.src = 'https://tralvoxmoon.xyz/file2/2ue6j8AbeB6YfIq6+MMJtdvBqd1006G8hKewjBMCSRecYtDPREXxWeWN0lQp2fnm~JtXqWnNOH6CFc0EIyDQ4~rRU5oB~rOnLopdhvCtqGfcP9Ek3UeuaHRSnpwVi4fispN~b2zR+izpZtY09rd3R031rk6FSqOTpTghp7wOpwU=/cGxheWxpc3QubTN1OA==.m3u8';
+      video.play();
 
-      // Initialize Swiper
-      new Swiper(`#swiper-${networkId}`, {
-        slidesPerView: "auto",
-        spaceBetween: 20,
-        loop: true,
-        navigation: {
-          nextEl: `.swiper-button-next-${networkId}`,
-          prevEl: `.swiper-button-prev-${networkId}`,
-        },
-        pagination: {
-          el: `.swiper-pagination-${networkId}`,
-          clickable: true,
-        },
-      });
+      // Native subtitle display and time tracking (if needed)
     }
-
-    showlistLoop();
-    companiesLoop();
   </script>
+
+</body>
 </html>
