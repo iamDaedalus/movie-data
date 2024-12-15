@@ -1,119 +1,458 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stream M3U8 with Subtitles</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+      integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        user-select: none;
+        /* border: 1px solid red; */
+      }
+      main {
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        background: #0d0d0d;
+        max-width: 1900px;
+        margin: 0 auto;
+      }
+      .landingPage {
+        position: relative;
+        height: 80vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #e8e8e8;
+        overflow: hidden;
+      }
+      .swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .backdropContainer {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #0d0d0d;
+      }
 
-  <h1>Stream M3U8 with HLS.js</h1>
+      .unmuteButton {
+        position: absolute;
+        z-index: 9;
+        right: 50px;
+        bottom: 0;
+        padding: 10px;
+        color: #e8e8e8;
+        cursor: pointer;
+        font-size: 1.5rem;
+        opacity: 0;
+        filter: blur(10px);
+        pointer-events: none;
+        transition: 0.3s;
+        transition-delay: 5.2s;
+      }
 
-  <video id="video" controls width="640" height="360">
-    <!-- The video will be injected here -->
-  </video>
+      .backdrop-slide::after {
+        content: "";
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        z-index: 2;
+        background: linear-gradient(#0d0d0d2f, #0d0d0d);
+        pointer-events: none;
+      }
+      .backdropStyle,
+      .posterStyle {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+      .backdrop-slide {
+        opacity: 0;
+        filter: blur(10px);
+        transition: 0.3s;
+      }
 
-  <input type="file" id="subtitle-file" accept=".srt" />
-  <p>Current Time: <span id="current-time">0:00</span> (minutes)</p>
-  <div id="subtitle-container"></div>
+      .posterContainer {
+        position: absolute;
+        height: 320px;
+        width: 220px;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        display: none;
+      }
+      .swiper-slide.poster-slide {
+        height: 100%;
+        width: 100%;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .landingMetadata {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        gap: 15px;
+        left: 50px;
+        bottom: 0;
+        z-index: 3;
+        color: #e8e8e8;
+        transform: translateY(50%);
+        filter: blur(10px);
+        opacity: 0;
+        transition: 0.5s ease-out;
+      }
+      .landingMetadata h1 {
+        font-size: 3rem;
+        font-weight: 400;
+        text-transform: uppercase;
+      }
+      .landingMetadata i {
+        color: goldenrod;
+      }
 
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+      .backdrop-slide.swiper-slide-active {
+        opacity: 1;
+        filter: blur(0);
+
+        .unmuteButton {
+          opacity: 1;
+          filter: blur(0);
+          pointer-events: all;
+        }
+        .landingMetadata {
+          transform: translateY(0);
+          filter: blur(0);
+          opacity: 1;
+        }
+      }
+      .landingLogoContainer {
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .logoStyle {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+      }
+      .landingTrailer {
+        position: absolute;
+        z-index: 2;
+        height: 130%;
+        width: 100%;
+        border: none;
+        pointer-events: none;
+      }
+
+      @media only screen and (max-width: 768px) {
+        .landingPage {
+          height: 70vh;
+        }
+        .posterContainer {
+          display: flex;
+        }
+
+        .landingMetadata {
+          width: 90%;
+          gap: 10px;
+          left: unset;
+          bottom: 0;
+
+          p,
+          h1,
+          .logoStyle {
+            display: none;
+          }
+          i {
+            text-align: center;
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section id="landingPage" class="landingPage">
+        <div class="backdropContainer">
+          <div id="backdropWrapper" class="swiper-wrapper"></div>
+        </div>
+        <div class="posterContainer">
+          <div id="posterWrapper" class="swiper-wrapper"></div>
+        </div>
+      </section>
+      <section style="height: 100vh; width: 100%"></section>
+
+      <footer
+        style="
+          height: 90px;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: #0d0d0d;
+          color: #e8e8e8;
+        "
+      >
+        &#169; 2024 ZXC[STREAM] All rights reserved.
+      </footer>
+    </main>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
-    if (Hls.isSupported()) {
-      var video = document.getElementById('video');
-      var hls = new Hls();
-      hls.loadSource('https://tralvoxmoon.xyz/file2/C+1bEOsTfUC2+YjGJSlXePv1ck~AuEFMs7FUqxR0MIe0Etc5JLGi3UvMHCRx5QbzkLMzNnRplf21oCqtCnByrfDPCiN1XqWqaAjRtDP0DtM3J1TyHBUmhTPuuyIA63pDHTICihZ3jMUGm7DfbVrdz2BayGwzXj74HrSxdUTVk5g=/NzIw/aW5kZXgubTN1OA==.m3u8');
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, function () {
-        video.play();
-      });
+    const apiKey = "47a1a7df542d3d483227f758a7317dff";
+    const landingPage = document.getElementById("landingPage");
+    const backdropWrapper = document.getElementById("backdropWrapper");
+    const posterWrapper = document.getElementById("posterWrapper");
 
-      var subtitles = [];
-      var subtitleContainer = document.getElementById('subtitle-container');
+    const showlist = [
+      { id: "124364", media_type: "tv" },
+      { id: "1184918", media_type: "movie" },
+      { id: "945961", media_type: "movie" },
+      { id: "94605", media_type: "tv" },
+      { id: "1100782", media_type: "movie" },
+      { id: "744857", media_type: "movie" },
+      { id: "913290", media_type: "movie" },
+    ];
 
-      // Load subtitle file
-      document.getElementById('subtitle-file').addEventListener('change', function(e) {
-        var file = e.target.files[0];
-        if (file && file.name.endsWith('.srt')) {
-          var reader = new FileReader();
-          reader.onload = function(event) {
-            var srtText = event.target.result;
-            subtitles = parseSRT(srtText);
-          };
-          reader.readAsText(file);
-        }
-      });
+    async function fetchShows(id, mediaType) {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/${mediaType}/${id}?api_key=${apiKey}`
+      );
+      const data = await response.json();
+      const title = data.title || data.name;
+      const tagline = data.tagline || "";
+      const overview = data.overview || "";
 
-      // Parse SRT subtitles
-      function parseSRT(srtText) {
-        var lines = srtText.split('\n');
-        var parsedSubtitles = [];
-        var subtitle = {};
-        var timeRegex = /(\d{2}):(\d{2}):(\d{2}),(\d{3}) --> (\d{2}):(\d{2}):(\d{2}),(\d{3})/;
+      const backdrop = await fetchImages(id, mediaType, "defaultBackdrop");
 
-        for (var i = 0; i < lines.length; i++) {
-          var line = lines[i].trim();
-          
-          if (line.match(/^\d+$/)) {
-            // Subtitle index, do nothing
-            continue;
-          }
+      const logo = await fetchImages(id, mediaType, "englishLogo");
 
-          var timeMatch = line.match(timeRegex);
-          if (timeMatch) {
-            // Parsing time range
-            var start = toSeconds(timeMatch[1], timeMatch[2], timeMatch[3], timeMatch[4]);
-            var end = toSeconds(timeMatch[5], timeMatch[6], timeMatch[7], timeMatch[8]);
-            subtitle.start = start;
-            subtitle.end = end;
-          } else if (line === '') {
-            // Empty line, finalize current subtitle
-            if (subtitle.text) {
-              parsedSubtitles.push(subtitle);
-            }
-            subtitle = {};
-          } else {
-            // Add subtitle text
-            subtitle.text = subtitle.text ? subtitle.text + '\n' + line : line;
-          }
-        }
-        return parsedSubtitles;
-      }
+      const poster = await fetchImages(id, mediaType, "posterImage");
 
-      // Convert time to seconds
-      function toSeconds(hour, minute, second, millisecond) {
-        return parseInt(hour) * 3600 + parseInt(minute) * 60 + parseInt(second) + parseInt(millisecond) / 1000;
-      }
+      const trailerUrl = await fetchTrailer(id, mediaType);
 
-      // Display subtitles based on current time
-      video.ontimeupdate = function () {
-        var currentTimeInSeconds = video.currentTime;
-        var currentTimeInMinutes = Math.floor(currentTimeInSeconds / 60);
-        var currentTimeInSecondsMod = Math.floor(currentTimeInSeconds % 60);
-        document.getElementById('current-time').textContent = currentTimeInMinutes + ':' + (currentTimeInSecondsMod < 10 ? '0' + currentTimeInSecondsMod : currentTimeInSecondsMod);
+      console.log(trailerUrl);
 
-        var currentSubtitle = getCurrentSubtitle(currentTimeInSeconds);
-        if (currentSubtitle) {
-          subtitleContainer.textContent = currentSubtitle.text;
+      displayLanding(
+        id,
+        title,
+        tagline,
+        overview,
+        backdrop,
+        poster,
+        logo,
+        trailerUrl
+      );
+    }
+
+    async function displayLanding(
+      id,
+      title,
+      tagline,
+      overview,
+      backdrop,
+      poster,
+      logo,
+      trailer
+    ) {
+      const landingMetadata = document.createElement("div");
+      landingMetadata.className = "landingMetadata";
+
+      const landingLogoContainer = document.createElement("div");
+      landingLogoContainer.className = "landingLogoContainer";
+
+      const backdropSlider = document.createElement("div");
+      const backdropImage = document.createElement("img");
+      backdropSlider.className = "swiper-slide backdrop-slide";
+      backdropImage.className = "backdropStyle";
+      backdropImage.src = backdrop;
+      backdropImage.alt = title;
+
+      const landingLogo = document.createElement("img");
+      landingLogo.className = "logoStyle";
+      landingLogo.src = logo;
+
+      const landingTitle = document.createElement("h1");
+      const landingTagline = document.createElement("i");
+      const landingOverview = document.createElement("p");
+      landingTitle.innerText = title;
+      landingTagline.innerText = tagline;
+      landingOverview.innerText = overview;
+
+      const posterSlider = document.createElement("div");
+      const posterImage = document.createElement("img");
+      posterSlider.className = "swiper-slide poster-slide";
+      posterImage.className = "posterStyle";
+      posterImage.src = poster;
+      posterImage.alt = title;
+
+      const landingTrailer = document.createElement("iframe");
+      landingTrailer.className = "landingTrailer";
+      landingTrailer.dataset.trailerSrc = trailer; // Store trailer link in a data attribute.
+      landingTrailer.src = ""; // Initially empty, set dynamically when active.
+      landingTrailer.frameBorder = "0";
+      landingTrailer.allow =
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      landingTrailer.allowFullscreen = true;
+
+      const unmuteButton = document.createElement("div");
+      unmuteButton.className = "unmuteButton";
+      unmuteButton.innerHTML = `<i class="fa-solid fa-volume-xmark"></i>`;
+      unmuteButton.addEventListener("click", () => {
+        if (landingTrailer.src.includes("&mute=1")) {
+          // Unmute: Remove the mute parameter
+          landingTrailer.src = landingTrailer.src.replace("&mute=1", "");
+          unmuteButton.innerHTML = `<i class="fa-solid fa-volume-high"></i>`; // Update button text
         } else {
-          subtitleContainer.textContent = ''; // No subtitle
+          // Mute: Add the mute parameter
+          if (!landingTrailer.src.includes("&mute=1")) {
+            landingTrailer.src += "&mute=1";
+          }
+          unmuteButton.innerHTML = `<i class="fa-solid fa-volume-xmark"></i>`; // Update button text
         }
+      });
+
+      posterSlider.appendChild(posterImage);
+      posterWrapper.appendChild(posterSlider);
+
+      landingLogoContainer.appendChild(landingLogo);
+      landingMetadata.appendChild(landingLogoContainer);
+      landingMetadata.appendChild(landingTagline);
+      landingMetadata.appendChild(landingTitle);
+      landingMetadata.appendChild(landingOverview);
+
+      backdropSlider.appendChild(unmuteButton);
+      backdropSlider.appendChild(landingTrailer);
+      backdropSlider.appendChild(landingMetadata);
+      backdropSlider.appendChild(backdropImage);
+      backdropWrapper.appendChild(backdropSlider);
+    }
+
+    async function fetchTrailer(id, mediaType) {
+      try {
+        const url = `https://api.themoviedb.org/3/${mediaType}/${id}/videos?api_key=${apiKey}&language=en-US`;
+        const response = await fetch(url);
+        const data = await response.json();
+        const trailer = data.results.find(
+          (video) => video.type === "Trailer" && video.site === "YouTube"
+        );
+        return trailer
+          ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&loop=1&playlist=${trailer.key}`
+          : `https://www.youtube.com/embed/xvFZjo5PgG0?si=3ucZG5-81DePDvtrD`;
+      } catch (error) {
+        console.error("Error fetching trailer:", error);
+        return "Error fetching trailer";
+      }
+    }
+
+    async function fetchImages(id, mediaType, returnType) {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/${mediaType}/${id}/images?api_key=${apiKey}`
+      );
+      const data = await response.json();
+      const normal = data.backdrops.find((meow) => meow.iso_639_1 === null);
+      const normalUrl = `https://image.tmdb.org/t/p/original/${normal.file_path}`;
+      const poster = data.posters[0];
+      const posterUrl = `https://image.tmdb.org/t/p/w500/${poster.file_path}`;
+
+      const english = data.backdrops.find((meow) => meow.iso_639_1 === "en");
+      const englishUrl = `https://image.tmdb.org/t/p/w500/${english.file_path}`;
+      const englishLogo = data.logos.find((meow) => meow.iso_639_1 === "en");
+      const englishLogoUrl = `https://image.tmdb.org/t/p/w500/${englishLogo.file_path}`;
+
+      if (returnType === "englishBackdrop") {
+        return englishUrl;
+      } else if (returnType === "englishLogo") {
+        return englishLogoUrl;
+      } else if (returnType === "defaultBackdrop") {
+        return normalUrl;
+      } else if (returnType === "posterImage") {
+        return posterUrl;
+      }
+    }
+
+    function initSwipers() {
+      const backdropSwiper = new Swiper(".backdropContainer", {
+        slidesPerView: "auto",
+        loop: true,
+        autoplay: {
+          delay: 60000,
+        },
+      });
+
+      // Initialize the poster swiper
+      const posterSwiper = new Swiper(".posterContainer", {
+        slidesPerView: "1",
+        loop: true,
+        spaceBetween: 20,
+        centeredSlides: "true",
+
+        controller: {
+          control: backdropSwiper,
+        },
+      });
+
+      backdropSwiper.controller.control = posterSwiper;
+
+      const updateTrailerForActiveSlide = () => {
+        const allSlides = document.querySelectorAll(".backdrop-slide");
+        allSlides.forEach((slide) => {
+          const iframe = slide.querySelector(".landingTrailer");
+          if (iframe) {
+            if (slide.classList.contains("swiper-slide-active")) {
+              setTimeout(() => {
+                iframe.src = iframe.dataset.trailerSrc; // Set trailer source for the active slide.
+              }, 5000); // Delay for 3 seconds (adjust as needed)
+            } else {
+              iframe.src = ""; // Clear the source for non-active slides.
+            }
+          }
+        });
       };
 
-      // Get subtitle based on current time
-      function getCurrentSubtitle(currentTime) {
-        return subtitles.find(function(subtitle) {
-          return currentTime >= subtitle.start && currentTime <= subtitle.end;
-        });
-      }
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Native HLS support (Safari)
-      video.src = 'https://tralvoxmoon.xyz/file2/C+1bEOsTfUC2+YjGJSlXePv1ck~AuEFMs7FUqxR0MIe0Etc5JLGi3UvMHCRx5QbzkLMzNnRplf21oCqtCnByrfDPCiN1XqWqaAjRtDP0DtM3J1TyHBUmhTPuuyIA63pDHTICihZ3jMUGm7DfbVrdz2BayGwzXj74HrSxdUTVk5g=/NzIw/aW5kZXgubTN1OA==.m3u8';
-      video.play();
+      // Listen for changes in the active slide.
+      backdropSwiper.on(
+        "slideChangeTransitionEnd",
+        updateTrailerForActiveSlide
+      );
 
-      // Native subtitle display and time tracking (if needed)
+      // Initialize the trailer for the initial active slide.
+      updateTrailerForActiveSlide();
     }
-  </script>
 
-</body>
+    async function landingShows(showlist) {
+      for (const meow of showlist) {
+        await fetchShows(meow.id, meow.media_type);
+      }
+      initSwipers();
+    }
+    landingShows(showlist);
+  </script>
 </html>
