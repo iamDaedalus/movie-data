@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>ZXC[STREAM]</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
@@ -23,6 +23,10 @@
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         user-select: none;
         /* border: 1px solid red; */
+      }
+      a {
+        text-decoration: none;
+        color: #e8e8e8;
       }
       body::-webkit-scrollbar {
         display: none;
@@ -101,18 +105,36 @@
 
       .posterContainer {
         position: absolute;
-        height: 320px;
-        width: 220px;
+        height: 280px;
+        width: 210px;
         align-items: center;
         justify-content: center;
         z-index: 1;
         display: none;
+        margin-top: 35px;
       }
       .swiper-slide.poster-slide {
         height: 100%;
         width: 100%;
         border-radius: 12px;
         overflow: hidden;
+        transition: 0.5s;
+        transform: scale(0.85);
+        filter: blur(10px);
+      }
+      .poster-slide.swiper-slide-active {
+        transform: scale(1.1);
+
+        filter: blur(0px);
+      }
+      .poster-slide.swiper-slide-prev {
+        transform: scale(0.95);
+        filter: blur(0px);
+      }
+      .poster-slide.swiper-slide-next {
+        transform: scale(0.95);
+
+        filter: blur(0px);
       }
       .landingMetadata {
         position: absolute;
@@ -173,35 +195,164 @@
         border: none;
         pointer-events: none;
       }
-
-      @media only screen and (max-width: 768px) {
-        .landingPage {
-          height: 70vh;
-        }
-        .posterContainer {
-          display: flex;
-        }
-
-        .landingMetadata {
-          width: 90%;
-          gap: 10px;
-          left: unset;
-          bottom: 0;
-
-          p,
-          h1,
-          .logoStyle {
-            display: none;
-          }
-          i {
-            text-align: center;
-          }
-        }
-      }
     </style>
   </head>
   <body>
     <main>
+      <style>
+        header {
+          position: fixed;
+          top: 0;
+          min-height: 60px;
+          width: 100%;
+          color: whitesmoke;
+          z-index: 99;
+          padding: 10px;
+          display: flex;
+          justify-content: space-around;
+          background: #0d0d0d4d;
+          flex-wrap: wrap;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 0 2px 1px #0d0d0d85;
+        }
+
+        .brandLogoContainer {
+          position: relative;
+          width: 300px;
+          height: 40px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .brandLogoContainer img {
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          object-fit: contain;
+          z-index: 1;
+        }
+        .brandLogoContainer h1 {
+          position: absolute;
+          font-size: 2rem;
+          opacity: 0.5;
+          letter-spacing: 2px;
+          filter: drop-shadow(0 0 1px rgb(8, 8, 8));
+        }
+
+        .movies,
+        .tvSeries,
+        .searchFunction,
+        .home {
+          display: flex;
+          gap: 10px;
+          justify-content: center;
+          align-items: center;
+        }
+        nav {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px;
+          color: whitesmoke;
+          width: 40%;
+          min-width: 400px;
+        }
+      </style>
+      <header>
+        <div class="brandLogoContainer">
+          <img
+            style="filter: drop-shadow(0 0 1px rgb(33, 33, 33))"
+            src="https://i.ibb.co/n0c3gXW/1.png"
+          />
+          <h1>[STREAM]</h1>
+        </div>
+
+        <nav>
+          <div class="home">
+            <div class="sidebar-logo">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-home"
+              >
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </div>
+            <p>Home</p>
+          </div>
+          <a href="/movie.html" class="movies">
+            <div class="sidebar-logo">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-clapperboard"
+              >
+                <path
+                  d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"
+                ></path>
+                <path d="m6.2 5.3 3.1 3.9"></path>
+                <path d="m12.4 3.4 3.1 4"></path>
+                <path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"></path>
+              </svg>
+            </div>
+            <p>Movies</p>
+          </a>
+          <a href="/tv.html" class="tvSeries">
+            <div class="sidebar-logo">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-tv"
+              >
+                <rect width="20" height="15" x="2" y="7" rx="2" ry="2"></rect>
+                <polyline points="17 2 12 7 7 2"></polyline>
+              </svg>
+            </div>
+            <p>Series</p>
+          </a>
+          <a href="/search.html" class="searchFunction">
+            <div class="sidebar-logo">
+              <svg
+                stroke="currentColor"
+                fill="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                class="style_inactive__EPRfk"
+                height="24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M11 2C15.968 2 20 6.032 20 11C20 15.968 15.968 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2ZM11 18C14.8675 18 18 14.8675 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18ZM19.4853 18.0711L22.3137 20.8995L20.8995 22.3137L18.0711 19.4853L19.4853 18.0711Z"
+                ></path>
+              </svg>
+            </div>
+            <p>Search</p>
+          </a>
+        </nav>
+      </header>
       <section id="landingPage" class="landingPage">
         <div class="backdropContainer">
           <div id="backdropWrapper" class="swiper-wrapper"></div>
@@ -225,7 +376,7 @@
           position: relative;
           font-family: sans-serif;
           font-weight: 800;
-          font-size: 7.5rem;
+          font-size: clamp(1rem, 2rem + 8.9041vw, 7.5rem);
           -webkit-text-stroke: 2px rgb(255, 17, 17);
           -webkit-text-fill-color: transparent;
         }
@@ -245,7 +396,7 @@
         }
         .onzxcstream {
           position: relative;
-          font-size: 2.4rem;
+          font-size: clamp(1rem, 1rem + 2vw, 2.4rem);
           font-weight: 700;
           letter-spacing: 3px;
           word-spacing: 5px;
@@ -415,6 +566,61 @@
           flex-direction: column;
           justify-content: center;
           align-items: center;
+        }
+        @media only screen and (max-width: 768px) {
+          .landingTrailer {
+            transform: scale(2);
+          }
+          .brandLogoContainer {
+            display: none;
+          }
+          nav {
+            flex-grow: 1;
+            font-size: 0.8rem;
+          }
+          .landingPage {
+            height: 70vh;
+          }
+          .posterContainer {
+            display: flex;
+          }
+
+          .landingMetadata {
+            width: 90%;
+            gap: 10px;
+            left: unset;
+            bottom: 0;
+
+            p,
+            h1,
+            .logoStyle {
+              display: none;
+            }
+            i {
+              text-align: center;
+            }
+          }
+          .slide-topTen,
+          .companySlide {
+            height: 150px;
+            width: 260px;
+          }
+          .top-ten-text:nth-child(2),
+          .top-ten-text:nth-child(3),
+          .top-ten-text:nth-child(4),
+          .top-ten-text:nth-child(5) {
+            margin-left: -10px;
+          }
+          .topTen {
+            height: 50vh;
+          }
+           .companiesContainer {
+         
+          gap: 60px;
+        }
+          .logoCompanyImg {
+          width: 30%;
+        }
         }
       </style>
       <div class="companiesContainer"></div>
@@ -739,7 +945,7 @@
         logoLink:
           "https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg",
       },
-     
+
       {
         networkId: "2739",
         logoLink:
