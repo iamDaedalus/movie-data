@@ -9,24 +9,37 @@
       href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
     />
     <link
+      href="https://api.fontshare.com/v2/css?f[]=bespoke-stencil@400,500,700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
       integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
     <style>
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         user-select: none;
+        font-family: "Montserrat";
         /* border: 1px solid red; */
       }
       a {
         text-decoration: none;
         color: #e8e8e8;
+      }
+      html {
+        background-color: black;
       }
       body::-webkit-scrollbar {
         display: none;
@@ -44,7 +57,7 @@
       }
       .landingPage {
         position: relative;
-        height: 80vh;
+        height: 37rem;
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -102,6 +115,7 @@
         opacity: 0;
         filter: blur(10px);
         transition: 0.3s;
+        overflow: hidden;
       }
 
       .posterContainer {
@@ -112,7 +126,7 @@
         justify-content: center;
         z-index: 1;
         display: none;
-        margin-top: 35px;
+
       }
       .swiper-slide.poster-slide {
         height: 100%;
@@ -196,13 +210,19 @@
         border: none;
         pointer-events: none;
       }
+      .showDetailsContainer{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+      }
     </style>
   </head>
   <body>
     <main>
       <style>
         header {
-          position: fixed;
+          position: absolute;
           top: 0;
           min-height: 60px;
           width: 100%;
@@ -211,7 +231,7 @@
           padding: 10px;
           display: flex;
           justify-content: space-around;
-          background: #0d0d0d4d;
+          background: #0d0d0d28;
           flex-wrap: wrap;
           backdrop-filter: blur(10px);
           box-shadow: 0 0 2px 1px #0d0d0d85;
@@ -375,7 +395,7 @@
         }
         .top-ten-text {
           position: relative;
-          font-family: sans-serif;
+          font-family: "Afacad Flux";
           font-weight: 800;
           font-size: clamp(1rem, 2rem + 8.9041vw, 7.5rem);
           -webkit-text-stroke: 2px rgb(255, 17, 17);
@@ -621,6 +641,9 @@
           .logoCompanyImg {
             width: 30%;
           }
+          .showDetailsContainer {
+            justify-content: center;
+          }
         }
       </style>
       <div class="companiesContainer"></div>
@@ -664,6 +687,15 @@
       const title = data.title || data.name;
       const tagline = data.tagline || "";
       const overview = data.overview || "";
+      const genre = data.genres[0];
+      const genreName = genre.name;
+      const yearReleased =
+        (data.release_date || data.first_air_date)?.split("-")[0] || "Unknown";
+
+      const runtimeInMinutes = data.runtime;
+      const runtime = runtimeInMinutes
+        ? `${Math.floor(runtimeInMinutes / 60)}h ${runtimeInMinutes % 60}m`
+        : `S${data.number_of_seasons}E${data.number_of_episodes}`;
 
       const backdrop = await fetchImages(id, mediaType, "defaultBackdrop");
 
@@ -681,7 +713,10 @@
         backdrop,
         poster,
         logo,
-        trailerUrl
+        trailerUrl,
+        genreName,
+        yearReleased,
+        runtime
       );
     }
 
@@ -693,7 +728,10 @@
       backdrop,
       poster,
       logo,
-      trailer
+      trailer,
+      genreName,
+      yearReleased,
+      runtime
     ) {
       const landingMetadata = document.createElement("div");
       landingMetadata.className = "landingMetadata";
@@ -720,6 +758,15 @@
       landingTitle.innerText = title;
       landingTagline.innerText = tagline;
       landingOverview.innerText = overview;
+
+      const showDetailsContainer = document.createElement("div");
+      showDetailsContainer.className = "showDetailsContainer";
+
+      showDetailsContainer.innerHTML = `
+      <h5>${genreName}</h5> |
+      <h5>${yearReleased}</h5> |
+      <h5>${runtime}</h5>
+      `;
 
       const posterSlider = document.createElement("div");
       const posterImage = document.createElement("img");
@@ -762,6 +809,7 @@
       landingMetadata.appendChild(landingLogoContainer);
       landingMetadata.appendChild(landingTagline);
       landingMetadata.appendChild(landingTitle);
+      landingMetadata.appendChild(showDetailsContainer);
       landingMetadata.appendChild(landingOverview);
 
       backdropSlider.appendChild(unmuteButton);
@@ -1004,7 +1052,6 @@
       }
     }
     function displayCompanies(networkId, logoLink, series) {
-      console.log(series);
       const companiesContainer = document.querySelector(".companiesContainer");
       // Create network section
       const networkSection = document.createElement("div");
