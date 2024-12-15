@@ -24,6 +24,9 @@
         user-select: none;
         /* border: 1px solid red; */
       }
+      body::-webkit-scrollbar {
+        display: none;
+      }
       main {
         min-height: 100vh;
         width: 100%;
@@ -207,8 +210,214 @@
           <div id="posterWrapper" class="swiper-wrapper"></div>
         </div>
       </section>
-      <section style="height: 100vh; width: 100%"></section>
+      <style>
+        .top-ten-container {
+          position: relative;
+          display: flex;
+          align-items: center;
+          color: white;
+          /* border: 1px solid red; */
+          max-width: 95%;
+          margin: 0 auto;
+          width: 95%;
+        }
+        .top-ten-text {
+          position: relative;
+          font-family: sans-serif;
+          font-weight: 800;
+          font-size: 7.5rem;
+          -webkit-text-stroke: 2px rgb(255, 17, 17);
+          -webkit-text-fill-color: transparent;
+        }
+        .top-ten-text::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0df7 90%);
+        }
+        .top-ten-text:nth-child(2),
+        .top-ten-text:nth-child(3),
+        .top-ten-text:nth-child(4),
+        .top-ten-text:nth-child(5) {
+          margin-left: -20px;
+        }
+        .onzxcstream {
+          position: relative;
+          font-size: 2.4rem;
+          font-weight: 700;
+          letter-spacing: 3px;
+          word-spacing: 5px;
+          color: #8d0e0e;
+        }
+        .onzxcstream::before {
+          content: "";
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          z-index: 1;
+          background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0d8c 95%);
+        }
 
+        .wrapper-topten {
+          display: flex;
+          align-items: center;
+          height: calc(100% - 180px);
+          width: 100%;
+          z-index: 99;
+        }
+
+        .top-ten-slides {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .slide-topTen {
+          position: relative;
+          height: 220px;
+          width: 400px;
+          filter: blur(5px);
+          transition: filter 0.5s;
+        }
+        .slide-topTen:hover {
+          z-index: 99;
+        }
+        .toptenimg {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+          border-radius: 12px;
+          transition: 0.2s;
+          background: rgb(220, 220, 220);
+          box-shadow: 0 0 15px 1px rgb(6, 6, 6);
+        }
+        .slide-topTen:hover .toptenimg {
+          transform: scale(1.06);
+        }
+        .numbering {
+          position: relative;
+          font-family: sans-serif;
+          font-size: 8rem;
+          position: absolute;
+          z-index: -1;
+          left: -55px;
+          bottom: 0;
+          -webkit-text-stroke: 2px rgb(255, 17, 17);
+          -webkit-text-fill-color: transparent;
+          transition: 0.5s;
+          filter: drop-shadow(0 0 2px #0d0d0d);
+        }
+        .slide-topTen:hover .numbering {
+          -webkit-text-fill-color: rgb(255, 17, 17);
+          transform: translateX(-25%) scale(1.1);
+        }
+        .numbering::before {
+          content: "";
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          z-index: 1;
+          background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0df7 80%);
+          transition: 0.5s;
+        }
+        .slide-topTen:hover .numbering::before {
+          background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0df7 95%);
+        }
+        .slide-topTen.swiper-slide-active,
+        .slide-topTen.swiper-slide-prev,
+        .slide-topTen.swiper-slide-next {
+          filter: blur(0);
+        }
+        .topTen {
+          height: 75vh;
+          background: #0d0d0d;
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          gap: 60px;
+        }
+        /* .top-ten-slides {
+          opacity: 0;
+          transform: translateY(50%);
+          filter: blur(10px);
+          transition: 0.7s ease-in-out;
+        } */
+      </style>
+      <div class="topTen">
+        <div class="top-ten-container">
+          <h1 class="top-ten-text">T</h1>
+          <h1 class="top-ten-text">O</h1>
+          <h1 class="top-ten-text">P</h1>
+          <h1 class="top-ten-text">1</h1>
+          <h1 class="top-ten-text">0</h1>
+          <div class="onzxcstream-container">
+            <p class="onzxcstream">
+              ON <br />
+              ZXC[STREAM]
+            </p>
+          </div>
+        </div>
+        <div class="top-ten-slides">
+          <div class="swiper-wrapper wrapper-topten"></div>
+        </div>
+      </div>
+      <style>
+        .companiesContainer {
+          min-height: 100vh;
+          width: 100%;
+          background: hsl(0, 0%, 4%);
+          display: flex;
+          flex-direction: column;
+          gap: 90px;
+          padding: 50px 10px;
+        }
+        .logoCompanyImg {
+          width: 18%;
+        }
+        .companySlide {
+          position: relative;
+          height: 230px;
+          width: 400px;
+          color: whitesmoke;
+          border-radius: 12px;
+          overflow: hidden;
+        }
+        .companySlide img {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+          transition: 0.3s ease-out;
+        }
+
+        .companySlide:hover img {
+          transform: scale(1.1);
+        }
+
+        .network-section {
+          /* background: red; */
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 20px;
+          width: 100%;
+          overflow: hidden;
+        }
+        .companySlide p {
+          position: absolute;
+          bottom: 0;
+          font-size: 1.5rem;
+          padding: 10px;
+        }
+        .swiper-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        }
+      </style>
+      <div class="companiesContainer"></div>
       <footer
         style="
           height: 90px;
@@ -258,8 +467,6 @@
 
       const trailerUrl = await fetchTrailer(id, mediaType);
 
-      console.log(trailerUrl);
-
       displayLanding(
         id,
         title,
@@ -292,12 +499,14 @@
       const backdropImage = document.createElement("img");
       backdropSlider.className = "swiper-slide backdrop-slide";
       backdropImage.className = "backdropStyle";
-      backdropImage.src = backdrop;
+      backdropImage.dataset.src = backdrop;
+      backdropImage.classList.add("lazy-load");
       backdropImage.alt = title;
 
       const landingLogo = document.createElement("img");
       landingLogo.className = "logoStyle";
-      landingLogo.src = logo;
+      landingLogo.dataset.src = logo;
+      landingLogo.classList.add("lazy-load");
 
       const landingTitle = document.createElement("h1");
       const landingTagline = document.createElement("i");
@@ -310,8 +519,9 @@
       const posterImage = document.createElement("img");
       posterSlider.className = "swiper-slide poster-slide";
       posterImage.className = "posterStyle";
-      posterImage.src = poster;
+      posterImage.dataset.src = poster;
       posterImage.alt = title;
+      posterImage.classList.add("lazy-load");
 
       const landingTrailer = document.createElement("iframe");
       landingTrailer.className = "landingTrailer";
@@ -378,14 +588,22 @@
       );
       const data = await response.json();
       const normal = data.backdrops.find((meow) => meow.iso_639_1 === null);
-      const normalUrl = `https://image.tmdb.org/t/p/original/${normal.file_path}`;
+      const normalUrl = normal
+        ? `https://image.tmdb.org/t/p/original/${normal.file_path}`
+        : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
       const poster = data.posters[0];
-      const posterUrl = `https://image.tmdb.org/t/p/w500/${poster.file_path}`;
+      const posterUrl = poster
+        ? `https://image.tmdb.org/t/p/w500/${poster.file_path}`
+        : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
 
       const english = data.backdrops.find((meow) => meow.iso_639_1 === "en");
-      const englishUrl = `https://image.tmdb.org/t/p/w500/${english.file_path}`;
+      const englishUrl = english
+        ? `https://image.tmdb.org/t/p/w500/${english.file_path}`
+        : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
       const englishLogo = data.logos.find((meow) => meow.iso_639_1 === "en");
-      const englishLogoUrl = `https://image.tmdb.org/t/p/w500/${englishLogo.file_path}`;
+      const englishLogoUrl = englishLogo
+        ? `https://image.tmdb.org/t/p/w500/${englishLogo.file_path}`
+        : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
 
       if (returnType === "englishBackdrop") {
         return englishUrl;
@@ -452,7 +670,244 @@
         await fetchShows(meow.id, meow.media_type);
       }
       initSwipers();
+      tamad();
     }
+
+    async function fetchWeekly() {
+      const ENendpoint = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`;
+      try {
+        const response = await fetch(ENendpoint);
+        if (!response.ok) {
+          throw new Error("Not Found");
+        }
+        const data = await response.json();
+        for (const [index, meow] of data.results.slice(0, 10).entries()) {
+          const number = index + 1;
+          const title = meow.title || meow.name;
+          const mediaType = "movie";
+          const mediaId = meow.id;
+
+          const englishBD = await fetchImages(
+            meow.id,
+            mediaType,
+            "englishBackdrop"
+          );
+
+          displayEnglish(englishBD, title, number);
+        }
+      } catch (error) {
+        console.error(error.message);
+      }
+      swiperIni2();
+    }
+    function swiperIni2() {
+      const swiper2 = new Swiper(".top-ten-slides", {
+        slidesPerView: "auto",
+        loop: true,
+        centeredSlides: true,
+        initialSlide: 1, // Start from the second slide
+        spaceBetween: 52,
+        mousewheel: false, // Enable mousewheel control
+      });
+    }
+    function displayEnglish(englishBackdropUrl, title, number) {
+      const toptenwrapper = document.querySelector(".wrapper-topten");
+      const topTenSlide = document.createElement("div");
+      topTenSlide.classList.add("swiper-slide", "slide-topTen");
+
+      topTenSlide.innerHTML = `
+            <h1 class="numbering">${number}</h1>
+            <img class="toptenimg lazy-load" data-src="${englishBackdropUrl}">
+          `;
+
+      toptenwrapper.appendChild(topTenSlide);
+    }
+
+    const companies = [
+      {
+        networkId: "213",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png",
+      },
+      {
+        networkId: "6219",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/4/49/MGM%2B_logo.svg",
+      },
+      {
+        networkId: "1024",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg",
+      },
+      {
+        networkId: "3186",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg",
+      },
+      {
+        networkId: "2739",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg",
+      },
+      {
+        networkId: "2552",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/2/28/Apple_TV_Plus_Logo.svg",
+      },
+      {
+        networkId: "4330",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/e/ea/Paramount%2B_logo.png",
+      },
+    ];
+    async function companiesLoop() {
+      for (const company of companies) {
+        await fetchCompanies(company.networkId, company.logoLink);
+        // await new Promise((resolve) => setTimeout(resolve, 1));
+      }
+    }
+    async function fetchCompanies(networkId, networkLogoLink) {
+      const mediaType = "tv";
+      const endpoint = `https://api.themoviedb.org/3/discover/${mediaType}?api_key=${apiKey}&with_networks=${networkId}`;
+
+      try {
+        const response = await fetch(endpoint);
+        if (!response.ok) {
+          throw new Error("Error fetching network data");
+        }
+        const data = await response.json();
+        const series = await Promise.all(
+          data.results.map(async (seriesItem) => {
+            // console.log(seriesItem);
+
+            const englishBackdropUrl = await fetchImages(
+              seriesItem.id,
+              mediaType,
+              "englishBackdrop"
+            );
+
+            return {
+              id: seriesItem.id,
+              overview: seriesItem.overview,
+              plainbackdropUrl: `https://image.tmdb.org/t/p/w1280/${seriesItem.backdrop_path}`,
+              posterUrl: `https://image.tmdb.org/t/p/w1280/${seriesItem.poster_path}`,
+              name: seriesItem.name,
+              backdropUrl: englishBackdropUrl,
+              mediaType: mediaType,
+              voteAverage: seriesItem.vote_average,
+              yearReleased: seriesItem.first_air_date,
+              countryOrigin: seriesItem.origin_country[0],
+            };
+          })
+        );
+
+        displayCompanies(networkId, networkLogoLink, series);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    function displayCompanies(networkId, logoLink, series) {
+      console.log(series);
+      const companiesContainer = document.querySelector(".companiesContainer");
+      // Create network section
+      const networkSection = document.createElement("div");
+      networkSection.classList.add("network-section");
+
+      // Add network logo
+      const logoImg = document.createElement("img");
+      logoImg.className = "logoCompanyImg";
+      logoImg.dataset.src = logoLink;
+      logoImg.alt = "Network Logo";
+      logoImg.classList.add("lazy-load");
+
+      // Create Swiper container
+      const swiperContainer = document.createElement("div");
+      swiperContainer.classList.add("swiper-container");
+      swiperContainer.id = `swiper-${networkId}`;
+
+      const swiperWrapper = document.createElement("div");
+      swiperWrapper.classList.add("swiper-wrapper");
+
+      // Populate Swiper with series
+      series.forEach((seriesItem) => {
+        if (seriesItem.backdropUrl) {
+          const swiperSlide = document.createElement("div");
+          swiperSlide.className = "companySlide";
+          swiperSlide.classList.add("swiper-slide");
+
+          const backdropImg = document.createElement("img");
+          backdropImg.dataset.src = seriesItem.backdropUrl;
+          backdropImg.alt = seriesItem.name;
+          backdropImg.classList.add("lazy-load");
+
+          const seriesName = document.createElement("p");
+          seriesName.textContent = seriesItem.name;
+
+          swiperSlide.appendChild(backdropImg);
+          swiperSlide.appendChild(seriesName);
+          swiperWrapper.appendChild(swiperSlide);
+          console.log();
+          // swiperSlide.addEventListener("click", () => {
+          //   modal(
+          //     seriesItem.id,
+          //     seriesItem.overview,
+          //     seriesItem.plainbackdropUrl,
+          //     seriesItem.posterUrl,
+          //     seriesItem.name,
+          //     seriesItem.mediaType,
+          //     seriesItem.voteAverage,
+          //     seriesItem.yearReleased,
+          //     seriesItem.countryOrigin
+          //   );
+          // });
+        }
+      });
+
+      swiperContainer.appendChild(swiperWrapper);
+      networkSection.appendChild(logoImg);
+      networkSection.appendChild(swiperContainer);
+      companiesContainer.appendChild(networkSection);
+
+      // Initialize Swiper
+      new Swiper(`#swiper-${networkId}`, {
+        slidesPerView: "auto",
+        spaceBetween: 20,
+        loop: true,
+        navigation: {
+          nextEl: `.swiper-button-next-${networkId}`,
+          prevEl: `.swiper-button-prev-${networkId}`,
+        },
+        pagination: {
+          el: `.swiper-pagination-${networkId}`,
+          clickable: true,
+        },
+      });
+    }
+
+    function tamad() {
+      const tamadpiktur = document.querySelectorAll("img.lazy-load");
+
+      const observer = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              img.src = img.dataset.src;
+              img.classList.remove("lazy-load");
+              observer.unobserve(img);
+            }
+          });
+        },
+        { threshold: 0.01 }
+      );
+
+      tamadpiktur.forEach((Image) => {
+        observer.observe(Image);
+      });
+    }
+
     landingShows(showlist);
+    fetchWeekly();
+    companiesLoop();
   </script>
 </html>
