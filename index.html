@@ -389,6 +389,9 @@
           margin: 0 auto;
           width: 95%;
         }
+        .meow {
+          display: flex;
+        }
         .top-ten-text {
           position: relative;
           font-family: "Afacad Flux";
@@ -515,15 +518,16 @@
       </style>
       <div class="topTen">
         <div class="top-ten-container">
-          <h1 class="top-ten-text">T</h1>
-          <h1 class="top-ten-text">O</h1>
-          <h1 class="top-ten-text">P</h1>
-          <h1 class="top-ten-text">1</h1>
-          <h1 class="top-ten-text">0</h1>
+          <div class="meow">
+            <h1 class="top-ten-text">T</h1>
+            <h1 class="top-ten-text">O</h1>
+            <h1 class="top-ten-text">P</h1>
+            <h1 class="top-ten-text">1</h1>
+            <h1 class="top-ten-text">0</h1>
+          </div>
           <div class="onzxcstream-container">
             <p class="onzxcstream">
-              ON <br />
-              ZXC[STREAM]
+              ON ZXC[STREAM]
             </p>
           </div>
         </div>
@@ -647,6 +651,10 @@
           .top-ten-text,
           .numbering {
             -webkit-text-stroke: 1px rgb(255, 17, 17);
+          }
+          .top-ten-container {
+            flex-direction: column;
+            align-items: flex-start;
           }
         }
       </style>
