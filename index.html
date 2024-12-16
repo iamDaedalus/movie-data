@@ -45,6 +45,7 @@
         display: none;
       }
       main {
+        position: relative;
         min-height: 100vh;
         width: 100%;
         display: flex;
@@ -843,20 +844,22 @@
       const normal = data.backdrops.find((meow) => meow.iso_639_1 === null);
       const normalUrl = normal
         ? `https://image.tmdb.org/t/p/original/${normal.file_path}`
-        : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
+        : "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibeodCS7BPOb9g45oi5UXnHI4lwGJECVpkbQTTZOSV4YTNkOWzY__ZQITNna1nBEiXMcATjNM20xtsKXbRPvejk1Rek-bRsp-ZiwOI5vyWMhYC_AEQodd_otWepiHkpG9zJCd0iABhb1iFFRuJXE6mSyWhy0xpQdv8IIZoOAl8aI1QBc4gRQxfvqim/s1600/%5BZXC%20STREAM%5D11.jpg";
       const poster = data.posters.find((meow) => meow.iso_639_1 === "en");
       const posterUrl = poster
         ? `https://image.tmdb.org/t/p/w500/${poster.file_path}`
-        : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
+        : "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibeodCS7BPOb9g45oi5UXnHI4lwGJECVpkbQTTZOSV4YTNkOWzY__ZQITNna1nBEiXMcATjNM20xtsKXbRPvejk1Rek-bRsp-ZiwOI5vyWMhYC_AEQodd_otWepiHkpG9zJCd0iABhb1iFFRuJXE6mSyWhy0xpQdv8IIZoOAl8aI1QBc4gRQxfvqim/s1600/%5BZXC%20STREAM%5D11.jpg";
 
       const english = data.backdrops.find((meow) => meow.iso_639_1 === "en");
       const englishUrl = english
         ? `https://image.tmdb.org/t/p/w500/${english.file_path}`
-        : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
+        : normalUrl ||
+          posterUrl ||
+          "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibeodCS7BPOb9g45oi5UXnHI4lwGJECVpkbQTTZOSV4YTNkOWzY__ZQITNna1nBEiXMcATjNM20xtsKXbRPvejk1Rek-bRsp-ZiwOI5vyWMhYC_AEQodd_otWepiHkpG9zJCd0iABhb1iFFRuJXE6mSyWhy0xpQdv8IIZoOAl8aI1QBc4gRQxfvqim/s1600/%5BZXC%20STREAM%5D11.jpg";
       const englishLogo = data.logos.find((meow) => meow.iso_639_1 === "en");
       const englishLogoUrl = englishLogo
         ? `https://image.tmdb.org/t/p/w500/${englishLogo.file_path}`
-        : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
+        : "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibeodCS7BPOb9g45oi5UXnHI4lwGJECVpkbQTTZOSV4YTNkOWzY__ZQITNna1nBEiXMcATjNM20xtsKXbRPvejk1Rek-bRsp-ZiwOI5vyWMhYC_AEQodd_otWepiHkpG9zJCd0iABhb1iFFRuJXE6mSyWhy0xpQdv8IIZoOAl8aI1QBc4gRQxfvqim/s1600/%5BZXC%20STREAM%5D11.jpg";
 
       if (returnType === "englishBackdrop") {
         return englishUrl;
@@ -885,6 +888,7 @@
         loop: true,
         spaceBetween: 20,
         centeredSlides: "true",
+        loopedSlides: 3,
 
         controller: {
           control: backdropSwiper,
