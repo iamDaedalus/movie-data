@@ -80,11 +80,6 @@
       }
 
       .unmuteButton {
-        position: absolute;
-        z-index: 9;
-        right: 50px;
-        bottom: 0;
-        padding: 10px;
         color: #e8e8e8;
         cursor: pointer;
         font-size: 1.5rem;
@@ -92,7 +87,7 @@
         filter: blur(10px);
         pointer-events: none;
         transition: 0.3s;
-        transition-delay: 5.2s;
+        transition-delay: 10.2s;
       }
 
       .backdrop-slide::after {
@@ -126,7 +121,6 @@
         justify-content: center;
         z-index: 1;
         display: none;
-
       }
       .swiper-slide.poster-slide {
         height: 100%;
@@ -156,7 +150,7 @@
         display: flex;
         flex-direction: column;
         width: 50%;
-        gap: 15px;
+        gap: 13px;
         left: 50px;
         bottom: 0;
         z-index: 3;
@@ -210,7 +204,7 @@
         border: none;
         pointer-events: none;
       }
-      .showDetailsContainer{
+      .showDetailsContainer {
         display: flex;
         align-items: center;
         gap: 10px;
@@ -470,7 +464,7 @@
         }
         .numbering {
           position: relative;
-          font-family: sans-serif;
+          font-family: "Poppins";
           font-size: 8rem;
           position: absolute;
           z-index: -1;
@@ -611,14 +605,12 @@
             gap: 10px;
             left: unset;
             bottom: 0;
+            align-items: center;
 
             p,
             h1,
             .logoStyle {
               display: none;
-            }
-            i {
-              text-align: center;
             }
           }
           .slide-topTen,
@@ -630,7 +622,7 @@
           .top-ten-text:nth-child(3),
           .top-ten-text:nth-child(4),
           .top-ten-text:nth-child(5) {
-            margin-left: -10px;
+            margin-left: -5px;
           }
           .topTen {
             height: 50vh;
@@ -643,6 +635,9 @@
           }
           .showDetailsContainer {
             justify-content: center;
+          }
+          svg {
+            display: none;
           }
         }
       </style>
@@ -809,10 +804,10 @@
       landingMetadata.appendChild(landingLogoContainer);
       landingMetadata.appendChild(landingTagline);
       landingMetadata.appendChild(landingTitle);
+
       landingMetadata.appendChild(showDetailsContainer);
       landingMetadata.appendChild(landingOverview);
-
-      backdropSlider.appendChild(unmuteButton);
+      landingMetadata.appendChild(unmuteButton);
       backdropSlider.appendChild(landingTrailer);
       backdropSlider.appendChild(landingMetadata);
       backdropSlider.appendChild(backdropImage);
@@ -845,7 +840,7 @@
       const normalUrl = normal
         ? `https://image.tmdb.org/t/p/original/${normal.file_path}`
         : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
-      const poster = data.posters[0];
+      const poster = data.posters.find((meow) => meow.iso_639_1 === "en");
       const posterUrl = poster
         ? `https://image.tmdb.org/t/p/w500/${poster.file_path}`
         : "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png";
@@ -875,7 +870,8 @@
         slidesPerView: "auto",
         loop: true,
         autoplay: {
-          delay: 120000,
+          delay: 5000,
+          disableOnInteraction: true,
         },
       });
 
@@ -901,7 +897,7 @@
             if (slide.classList.contains("swiper-slide-active")) {
               setTimeout(() => {
                 iframe.src = iframe.dataset.trailerSrc; // Set trailer source for the active slide.
-              }, 5000); // Delay for 3 seconds (adjust as needed)
+              }, 10000); // Delay for 3 seconds (adjust as needed)
             } else {
               iframe.src = ""; // Clear the source for non-active slides.
             }
@@ -953,6 +949,7 @@
         console.error(error.message);
       }
       swiperIni2();
+      tamad();
     }
     function swiperIni2() {
       const swiper2 = new Swiper(".top-ten-slides", {
@@ -1004,12 +1001,23 @@
         logoLink:
           "https://upload.wikimedia.org/wikipedia/commons/2/28/Apple_TV_Plus_Logo.svg",
       },
+      {
+        networkId: "3353",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/d/d3/NBCUniversal_Peacock_Logo.svg",
+      },
+      {
+        networkId: "13",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/7/7a/Nickelodeon_2009_logo.svg",
+      },
     ];
     async function companiesLoop() {
       for (const company of companies) {
         await fetchCompanies(company.networkId, company.logoLink);
         // await new Promise((resolve) => setTimeout(resolve, 1));
       }
+      tamad();
     }
     async function fetchCompanies(networkId, networkLogoLink) {
       const mediaType = "tv";
