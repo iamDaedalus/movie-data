@@ -3,33 +3,1894 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>ZXC[STREAM]</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=bespoke-stencil@400,500,700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+      integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none;
+        font-family: "Montserrat";
+        /* border: 1px solid red; */
+      }
+      .slide-progress {
+        position: absolute;
+        top: 0;
+        right: 0;
+        opacity: 1;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 99;
+      }
+
+      .slide-circle {
+        position: absolute;
+        width: 29px;
+        height: 29px;
+        border-radius: 50%;
+        background: #151515;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .slide-rating {
+        font-size: 0.8rem;
+        z-index: 1;
+        font-weight: 600;
+        color: white;
+      }
+
+      .play-hover {
+        opacity: 0;
+        position: absolute;
+        height: 90px;
+        width: 90px;
+        z-index: 2;
+        pointer-events: none;
+        transition: 0.3s;
+      }
+
+      .playBut {
+        display: inline-block;
+        -webkit-transition: all 0.5s ease;
+
+        .triangle {
+          -webkit-transition: all 0.7s ease-in-out;
+          stroke-dasharray: 240;
+          stroke-dashoffset: 480;
+          stroke: #342ceb;
+          transform: translateY(0);
+        }
+
+        .movie-card:hover & {
+          .triangle {
+            stroke-dashoffset: 0;
+            opacity: 1;
+            stroke: #e8e8e8;
+            animation: nudge 0.7s ease-in-out;
+
+            @keyframes nudge {
+              0% {
+                transform: translateX(0);
+              }
+              30% {
+                transform: translateX(-5px);
+              }
+              50% {
+                transform: translateX(5px);
+              }
+              70% {
+                transform: translateX(-2px);
+              }
+              100% {
+                transform: translateX(0);
+              }
+            }
+          }
+
+          .circle {
+            stroke-dashoffset: 0;
+            opacity: 1;
+          }
+        }
+      }
+      a {
+        text-decoration: none;
+        color: #e8e8e8;
+      }
+      i {
+        transition: 0.3s ease;
+      }
+      i:hover {
+        color: crimson;
+        transform: scale(1.2);
+      }
+      html {
+        background-color: black;
+      }
+      body::-webkit-scrollbar {
+        display: none;
+      }
+      main {
+        position: relative;
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        background: #0d0d0d;
+        max-width: 1900px;
+        margin: 0 auto;
+        overflow: hidden;
+      }
+      .landingPage {
+        position: relative;
+        height: 80vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #e8e8e8;
+        overflow: hidden;
+      }
+      .swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .backdropContainer {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #0d0d0d;
+      }
+
+      .unmuteButton {
+        color: #e8e8e8;
+        cursor: pointer;
+        font-size: 1.5rem;
+        opacity: 0;
+        filter: blur(10px);
+        pointer-events: none;
+        transition: 0.3s;
+        transition-delay: 10.2s;
+      }
+
+      .backdrop-slide::after {
+        content: "";
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        z-index: 2;
+        background: linear-gradient(#0d0d0d2f, #0d0d0d);
+        pointer-events: none;
+      }
+      .backdropStyle,
+      .posterStyle {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+      .backdrop-slide {
+        opacity: 0;
+        filter: blur(10px);
+        transition: 0.3s;
+        overflow: hidden;
+      }
+
+      .posterContainer {
+        position: absolute;
+        height: 280px;
+        width: 210px;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        display: none;
+        pointer-events: none;
+      }
+      .swiper-slide.poster-slide {
+        height: 100%;
+        width: 100%;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: 0.5s;
+        transform: scale(0.85);
+        filter: blur(10px);
+      }
+      .poster-slide.swiper-slide-active {
+        transform: scale(1.1);
+
+        filter: blur(0px);
+      }
+      .poster-slide.swiper-slide-prev {
+        transform: scale(0.95);
+        filter: blur(0px);
+      }
+      .poster-slide.swiper-slide-next {
+        transform: scale(0.95);
+
+        filter: blur(0px);
+      }
+      .landingMetadata {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        gap: 13px;
+        left: 50px;
+        bottom: 0;
+        z-index: 3;
+        color: #e8e8e8;
+        transition-delay: 0.3s;
+      }
+      .landingMetadata h1 {
+        font-size: 3rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        opacity: 0;
+        filter: blur(10px);
+        transform: translateX(-70%);
+      }
+      .landingMetadata i {
+        opacity: 0;
+        filter: blur(10px);
+        transform: translateX(-80%);
+      }
+      .landingMetadata p {
+        color: goldenrod;
+        opacity: 0;
+        filter: blur(10px);
+        transform: translateX(-50%);
+      }
+
+      .landingLogoContainer {
+        height: 150px;
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+        opacity: 0;
+        filter: blur(10px);
+        transform: translateX(-90%);
+      }
+      .logoStyle {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+      }
+      .landingTrailer {
+        position: absolute;
+        z-index: 2;
+        height: 130%;
+        width: 100%;
+        border: none;
+        pointer-events: none;
+      }
+      .showDetailsContainer {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+        transform: translateX(-60%);
+        opacity: 0;
+        filter: blur(10px);
+      }
+      .backdrop-slide.swiper-slide-active {
+        opacity: 1;
+        filter: blur(0);
+
+        .unmuteButton {
+          opacity: 1;
+          filter: blur(0);
+          pointer-events: all;
+        }
+        .landingLogoContainer {
+          transform: translateX(0%);
+          transition: 0.8s ease;
+          opacity: 1;
+          filter: blur(0);
+          transition-delay: 0.2s;
+        }
+        .landingMetadata i {
+          color: goldenrod;
+          transform: translateX(0%);
+          transition: 0.8s ease;
+          transition-delay: 0.3s;
+          opacity: 1;
+          filter: blur(0);
+        }
+        .landingMetadata h1 {
+          transition: 0.8s ease;
+          transform: translateX(0%);
+          transition-delay: 0.4s;
+          opacity: 1;
+          filter: blur(0);
+        }
+        .showDetailsContainer {
+          transform: translateX(0%);
+          transition: 0.8s ease;
+          transition-delay: 0.6s;
+          opacity: 1;
+          filter: blur(0);
+        }
+        .landingMetadata p {
+          transform: translateX(0%);
+          transition: 0.8s ease;
+          transition-delay: 0.7s;
+          opacity: 1;
+          filter: blur(0);
+        }
+      }
+    </style>
   </head>
-  <style>
-    body {
-      height: 100vh;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-    }
-  </style>
   <body>
-    <a href="https://avatars.imvu.com/Qatrina">Qatrina's Profile</a>
+    <style>
+      .modal {
+        position: fixed;
+        min-height: 100vh;
+        width: 100%;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 991;
+        background-color: #0d0d0d;
+        display: flex;
+        padding: 30px 80px;
+        gap: 10px;
+        color: white;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.2s ease-out;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        overflow-y: auto;
+      }
+      .modal::-webkit-scrollbar {
+        display: none;
+      }
+      .modal::after {
+        content: "";
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.816);
+        backdrop-filter: blur(10px);
+        z-index: -1;
+      }
+      .modal-active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .posterContainerModal {
+        width: 30%;
+        height: 100%;
+        border: 1px solid rgb(74, 74, 74);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .posterContainerModal img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+      .informationContainer {
+        width: 70%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .titleContainer {
+        height: 25%;
+        width: 100%;
+        display: flex;
+        align-items: center;
 
-    <a
-      href="https://imvu-customer-sandbox.com/Qatrina?logged_in_user=MzMxMDg0MTM4XzE3MzQ3MTgzNDFfYzAwNWZmM2NhZDY0OWU0MTNlYmU2YzE2ZWRjOTc5YWM1ZDZlMTQxNDFlN2E5NTI2OTliMGFlYTA3MzI5MTcwMA,,&inter=&show_inner=1&outer=avatars.imvu.com#"
-      >Send message</a
-    >
+        border-radius: 12px;
+      }
+      .buttonsContainer {
+        height: 10%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+      }
+      .buttonsContainer button {
+        width: 100%;
+        height: 100%;
+        border: 1px solid rgb(0, 0, 0);
+        box-shadow: 6px 6px 12px #000000, -6px -6px 12px #1f1f1f;
+      }
+      .button-active {
+        background: crimson;
+        color: #e8e8e8;
+      }
+      .overviewContainer {
+        height: 65%;
+        overflow-y: auto;
+        width: 100%;
+        padding: 10px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
 
-    <a href="https://www.imvu.com/catalog/web_add_contact.php?contact=Qatrina"
-      >Add friend</a
-    >
+        /* border: 1px solid rgb(74, 74, 74); */
+      }
+      .overviewContainer::-webkit-scrollbar {
+        display: none;
+      }
 
-    <a
-      href="https://www.imvu.com/shop/web_search.php?manufacturers_id=318789280"
-      >Shop Qatrina</a
-    >
+      .season-item {
+        display: none;
+        position: relative;
+        background: red;
+      }
+      .season-item-active {
+        display: flex;
+      }
+
+      #progressBarRating {
+        width: 120px;
+        height: 120px;
+        display: flex;
+        padding: 10px;
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-progress {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-circle {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #151515;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-rating {
+        font-size: 1.5rem;
+        z-index: 1;
+        font-weight: 600;
+        color: white;
+      }
+      #modalTitle {
+        font-size: 3rem;
+      }
+
+      .season-dropdown {
+        padding: 10px;
+        outline: none;
+        position: sticky;
+        top: -12px;
+        border-radius: 8px;
+      }
+
+      .episodeContainer {
+        display: flex;
+        height: 200px;
+        gap: 10px;
+      }
+      .episodeTextContainer {
+        width: 60%;
+        padding: 10px;
+      }
+      .episodeImageContainer {
+        width: 40%;
+        overflow: hidden;
+      }
+      .episodeImageContainer img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+      .episodeWrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      @media only screen and (max-width: 768px) {
+        .modal {
+          flex-direction: column;
+          padding: 10px;
+        }
+        .posterContainerModal {
+          width: 100%;
+          min-height: 70vh;
+        }
+        .informationContainer {
+          width: 100%;
+          min-height: 90vh;
+        }
+        #modalTitle {
+          font-size: 2rem;
+        }
+        .circular-progress {
+          width: 70px;
+          height: 70px;
+        }
+        .inner-circle {
+          width: 50px;
+          height: 50px;
+        }
+      }
+    </style>
+    <main>
+      <div class="modal">
+        <i
+          id="closeModal"
+          style="
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: whitesmoke;
+            padding: 20px;
+            font-size: 2rem;
+          "
+          class="fa-solid fa-arrow-left-long"
+        ></i>
+        <div class="posterContainerModal">
+          <img id="modalPoster" src="" />
+        </div>
+        <div class="informationContainer">
+          <div class="titleContainer">
+            <div
+              style="
+                width: calc(100% - 120px);
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+              "
+            >
+              <h1 id="modalTitle"></h1>
+              <div style="display: flex; padding: 10px">
+                <p id="countryOriginContainer">Year</p>
+                &nbsp; | &nbsp;
+                <p id="yearReleasedContainer"></p>
+                &nbsp; | &nbsp;
+                <p
+                  style="text-transform: uppercase"
+                  id="MediaTypeContainer"
+                ></p>
+              </div>
+            </div>
+            <div id="progressBarRating"></div>
+          </div>
+          <div class="buttonsContainer">
+            <button id="buttonOverview">Overview</button>
+            <button id="buttonEpisodes" style="display: none">Episodes</button>
+            <button id="buttonTrailer">Trailers</button>
+            <button>Images</button>
+          </div>
+          <div class="overviewContainer"></div>
+        </div>
+      </div>
+      <style>
+        header {
+          position: absolute;
+          top: 0;
+          min-height: 60px;
+          width: 100%;
+          color: whitesmoke;
+          z-index: 99;
+          padding: 10px;
+          display: flex;
+          justify-content: space-around;
+          background: #0d0d0d28;
+          flex-wrap: wrap;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 0 2px 1px #0d0d0d85;
+        }
+
+        .brandLogoContainer {
+          position: relative;
+          width: 300px;
+          height: 40px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .brandLogoContainer img {
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          object-fit: contain;
+          z-index: 1;
+        }
+        .brandLogoContainer h1 {
+          font-family: "Bespoke Stencil";
+          position: absolute;
+          font-size: 2rem;
+          opacity: 0.5;
+          letter-spacing: 2px;
+          filter: drop-shadow(0 0 1px rgb(8, 8, 8));
+        }
+
+        .movies,
+        .tvSeries,
+        .searchFunction,
+        .home {
+          display: flex;
+          gap: 10px;
+          justify-content: center;
+          align-items: center;
+        }
+        nav {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px;
+          color: whitesmoke;
+          width: 40%;
+        }
+      </style>
+      <header>
+        <div class="brandLogoContainer">
+          <img
+            style="filter: drop-shadow(0 0 1px rgb(33, 33, 33))"
+            src="https://i.ibb.co/n0c3gXW/1.png"
+          />
+          <h1>[STREAM]</h1>
+        </div>
+
+        <nav>
+          <div class="home">
+            <div class="sidebar-logo">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-home"
+              >
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </div>
+            <p>Home</p>
+          </div>
+          <a href="/movie.html" class="movies">
+            <div class="sidebar-logo">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-clapperboard"
+              >
+                <path
+                  d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"
+                ></path>
+                <path d="m6.2 5.3 3.1 3.9"></path>
+                <path d="m12.4 3.4 3.1 4"></path>
+                <path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"></path>
+              </svg>
+            </div>
+            <p>Movies</p>
+          </a>
+          <a href="/tv.html" class="tvSeries">
+            <div class="sidebar-logo">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-tv"
+              >
+                <rect width="20" height="15" x="2" y="7" rx="2" ry="2"></rect>
+                <polyline points="17 2 12 7 7 2"></polyline>
+              </svg>
+            </div>
+            <p>Series</p>
+          </a>
+          <a href="/search.html" class="searchFunction">
+            <div class="sidebar-logo">
+              <svg
+                stroke="currentColor"
+                fill="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                class="style_inactive__EPRfk"
+                height="24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M11 2C15.968 2 20 6.032 20 11C20 15.968 15.968 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2ZM11 18C14.8675 18 18 14.8675 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18ZM19.4853 18.0711L22.3137 20.8995L20.8995 22.3137L18.0711 19.4853L19.4853 18.0711Z"
+                ></path>
+              </svg>
+            </div>
+            <p>Search</p>
+          </a>
+        </nav>
+      </header>
+      <section id="landingPage" class="landingPage">
+        <div class="backdropContainer">
+          <div id="backdropWrapper" class="swiper-wrapper"></div>
+        </div>
+        <div class="posterContainer">
+          <div id="posterWrapper" class="swiper-wrapper"></div>
+        </div>
+      </section>
+      <style>
+        .top-ten-container {
+          position: relative;
+          display: flex;
+          align-items: center;
+          color: white;
+          /* border: 1px solid red; */
+          max-width: 95%;
+          margin: 0 auto;
+          width: 95%;
+        }
+        .meow {
+          display: flex;
+        }
+        .top-ten-text {
+          position: relative;
+          font-family: "Afacad Flux";
+          font-weight: 800;
+          font-size: clamp(0.95rem, 2rem + 8.9041vw, 7.5rem);
+          -webkit-text-stroke: 2px rgb(255, 17, 17);
+          -webkit-text-fill-color: transparent;
+        }
+        .top-ten-text::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0df7 90%);
+        }
+        .top-ten-text:nth-child(2),
+        .top-ten-text:nth-child(3),
+        .top-ten-text:nth-child(4),
+        .top-ten-text:nth-child(5) {
+          margin-left: -20px;
+        }
+        .onzxcstream {
+          position: relative;
+          font-size: clamp(1rem, 1rem + 2vw, 2.4rem);
+          font-weight: 700;
+          letter-spacing: 3px;
+          word-spacing: 5px;
+          color: #8d0e0e;
+        }
+        .onzxcstream::before {
+          content: "";
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          z-index: 1;
+          background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0d8c 95%);
+        }
+
+        .wrapper-topten {
+          display: flex;
+          align-items: center;
+          height: calc(100% - 180px);
+          width: 100%;
+          z-index: 99;
+        }
+
+        .top-ten-slides {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .slide-topTen {
+          position: relative;
+          height: 170px;
+          width: 300px;
+          filter: blur(2px);
+          transition: filter 0.5s;
+        }
+        .slide-topTen:hover {
+          z-index: 99;
+        }
+        .toptenimg {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+          border-radius: 10px;
+          transition: 0.2s;
+          background: rgb(220, 220, 220);
+          box-shadow: 0 0 15px 1px rgb(6, 6, 6);
+        }
+        .slide-topTen:hover .toptenimg {
+          transform: scale(1.06);
+        }
+        .numbering {
+          position: relative;
+          font-family: "Roboto";
+          font-size: 9rem;
+          position: absolute;
+          z-index: -1;
+          left: -55px;
+          bottom: 0;
+          -webkit-text-stroke: 2px rgb(255, 17, 17);
+          -webkit-text-fill-color: transparent;
+          transition: 0.5s;
+          filter: drop-shadow(0 0 2px #0d0d0d);
+        }
+        .slide-topTen:hover .numbering {
+          -webkit-text-fill-color: rgb(255, 17, 17);
+          transform: translateX(-25%) scale(1.1);
+        }
+        .numbering::before {
+          content: "";
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          z-index: 1;
+          background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0df7 80%);
+          transition: 0.5s;
+        }
+        .slide-topTen:hover .numbering::before {
+          background: linear-gradient(90deg, rgba(0, 0, 0, 0), #0d0d0df7 95%);
+        }
+        .slide-topTen.swiper-slide-active,
+        .slide-topTen.swiper-slide-prev,
+        .slide-topTen.swiper-slide-next {
+          filter: blur(0);
+        }
+        .topTen {
+          height: 75vh;
+          background: #0d0d0d;
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          gap: 60px;
+        }
+        /* .top-ten-slides {
+          opacity: 0;
+          transform: translateY(50%);
+          filter: blur(10px);
+          transition: 0.7s ease-in-out;
+        } */
+      </style>
+      <div class="topTen">
+        <div class="top-ten-container">
+          <div class="meow">
+            <h1 class="top-ten-text">T</h1>
+            <h1 class="top-ten-text">O</h1>
+            <h1 class="top-ten-text">P</h1>
+            <h1 class="top-ten-text">1</h1>
+            <h1 class="top-ten-text">0</h1>
+          </div>
+          <div class="onzxcstream-container">
+            <p class="onzxcstream">ON ZXC[STREAM]</p>
+          </div>
+        </div>
+        <div class="top-ten-slides">
+          <div class="swiper-wrapper wrapper-topten"></div>
+        </div>
+      </div>
+      <style>
+        .companiesContainer {
+          min-height: 100vh;
+          width: 100%;
+          background: #060606;
+          display: flex;
+          flex-direction: column;
+          gap: 90px;
+          padding: 50px 10px;
+        }
+        .logoCompanyImg {
+          width: 15%;
+          filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.549));
+        }
+        .companySlide {
+          position: relative;
+          color: whitesmoke;
+          height: 200px;
+          width: 310px;
+        }
+        .hoverContainer {
+          position: absolute;
+          height: 180px;
+          width: 310px;
+          background: rgb(50, 50, 50);
+          display: flex;
+          justify-content: center;
+          transition: 0.3s ease-out;
+          border-radius: 12px;
+          cursor: pointer;
+          color: #e8e8e8;
+        }
+
+        .backdropImgContainer {
+          height: 180px;
+          width: 320px;
+
+          box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.496);
+          border-radius: 12px;
+          overflow: hidden;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transition: 0.3s ease-out;
+        }
+        .companyImage {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+        }
+        .companyInfo {
+          position: absolute;
+          bottom: 0;
+          opacity: 0;
+          height: 120px;
+          width: 100%;
+          padding: 0 10px;
+        }
+
+        .companyMeow {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .companyArf {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          width: 100%;
+          justify-content: flex-end;
+          font-size: 1.5rem;
+          height: 35%;
+        }
+
+        .companyMeow p {
+          font-size: 0.8rem;
+          text-align: justify;
+          display: -webkit-box; /* Enable a flexible box */
+          -webkit-line-clamp: 3; /* Show up to 3 lines (adjust as needed) */
+          -webkit-box-orient: vertical; /* Set text orientation to vertical */
+          overflow: hidden; /* Hide overflow content */
+          text-overflow: ellipsis; /* Add ellipsis (...) for truncated text */
+        }
+
+        .hoverContainer:hover {
+          height: 290px;
+          width: 340px;
+          transition-delay: 0.4s;
+
+          .backdropImgContainer {
+            transform: translateY(-10%);
+            transition-delay: 0.4s;
+          }
+          .companyInfo {
+            opacity: 1;
+            transition-delay: 0.5s;
+          }
+          .circular-progress {
+            opacity: 1;
+            transition: 0.3s ease-out;
+            transition-delay: 0.5s;
+          }
+        }
+
+        .network-section {
+          /* background: red; */
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 20px;
+          width: 100%;
+        }
+
+        .swiper-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          padding: 10px;
+        }
+        @media only screen and (max-width: 768px) {
+          .landingTrailer {
+            transform: scale(2);
+          }
+          .brandLogoContainer {
+            display: none;
+          }
+          nav {
+            flex-grow: 1;
+            font-size: 0.8rem;
+          }
+          .landingPage {
+            height: 70vh;
+          }
+          .posterContainer {
+            display: flex;
+          }
+
+          .landingMetadata {
+            width: 90%;
+            gap: 10px;
+            left: unset;
+            bottom: 0;
+            align-items: center;
+
+            p,
+            h1,
+            .logoStyle {
+              display: none;
+            }
+            i {
+              text-align: center;
+            }
+          }
+          .slide-topTen {
+            height: 150px;
+            width: 260px;
+          }
+          .top-ten-text:nth-child(2),
+          .top-ten-text:nth-child(3),
+          .top-ten-text:nth-child(4),
+          .top-ten-text:nth-child(5) {
+            margin-left: -5px;
+          }
+          .topTen {
+            height: 50vh;
+          }
+          .companiesContainer {
+            gap: 60px;
+          }
+          .logoCompanyImg {
+            width: 30%;
+          }
+          .showDetailsContainer {
+            justify-content: center;
+          }
+          svg {
+            display: none;
+          }
+          .top-ten-text,
+          .numbering {
+            -webkit-text-stroke: 1px rgb(255, 17, 17);
+          }
+          .top-ten-container {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+        }
+      </style>
+      <div class="companiesContainer"></div>
+      <footer
+        style="
+          height: 90px;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: #0d0d0d;
+          color: #e8e8e8;
+        "
+      >
+        &#169; 2024 ZXC[STREAM] All rights reserved.
+      </footer>
+    </main>
   </body>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    const apiKey = "47a1a7df542d3d483227f758a7317dff";
+    const landingPage = document.getElementById("landingPage");
+    const backdropWrapper = document.getElementById("backdropWrapper");
+    const posterWrapper = document.getElementById("posterWrapper");
+
+    const showlist = [
+      { id: "124364", media_type: "tv" },
+      { id: "1184918", media_type: "movie" },
+      { id: "945961", media_type: "movie" },
+      { id: "94605", media_type: "tv" },
+      { id: "1100782", media_type: "movie" },
+      { id: "744857", media_type: "movie" },
+      { id: "913290", media_type: "movie" },
+    ];
+
+    async function landingShows(showlist) {
+      for (const meow of showlist) {
+        const arf = await fetchShows(meow.id, meow.media_type);
+        displayLanding(arf);
+      }
+      initSwipers();
+      tamad();
+    }
+
+    async function displayLanding(meow) {
+      const landingMetadata = document.createElement("div");
+      landingMetadata.className = "landingMetadata";
+
+      const landingLogoContainer = document.createElement("div");
+      landingLogoContainer.className = "landingLogoContainer";
+
+      const backdropSlider = document.createElement("div");
+      const backdropImage = document.createElement("img");
+      backdropSlider.className = "swiper-slide backdrop-slide";
+      backdropImage.className = "backdropStyle";
+      backdropImage.dataset.src = meow.backdrop;
+      backdropImage.classList.add("lazy-load");
+      backdropImage.alt = meow.title;
+
+      const landingLogo = document.createElement("img");
+      landingLogo.className = "logoStyle";
+      landingLogo.dataset.src = meow.logo;
+      landingLogo.classList.add("lazy-load");
+
+      const landingTitle = document.createElement("h1");
+      const landingTagline = document.createElement("i");
+      const landingOverview = document.createElement("p");
+      landingTitle.innerText = meow.title;
+      landingTagline.innerText = meow.tagline;
+      landingOverview.innerText = meow.overview;
+
+      const showDetailsContainer = document.createElement("div");
+      showDetailsContainer.className = "showDetailsContainer";
+
+      showDetailsContainer.innerHTML = `
+      <h5>${meow.genre}</h5> |
+      <h5>${meow.year}</h5> |
+      <h5>${meow.run}</h5>
+      `;
+
+      const posterSlider = document.createElement("div");
+      const posterImage = document.createElement("img");
+      posterSlider.className = "swiper-slide poster-slide";
+      posterImage.className = "posterStyle";
+      posterImage.dataset.src = meow.poster;
+      posterImage.alt = meow.title;
+      posterImage.classList.add("lazy-load");
+
+      const landingTrailer = document.createElement("iframe");
+      landingTrailer.className = "landingTrailer";
+      landingTrailer.dataset.trailerSrc = meow.trailer; // Store trailer link in a data attribute.
+      landingTrailer.src = ""; // Initially empty, set dynamically when active.
+      landingTrailer.frameBorder = "0";
+      landingTrailer.allow =
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      landingTrailer.allowFullscreen = true;
+
+      const unmuteButton = document.createElement("div");
+      unmuteButton.className = "unmuteButton";
+      unmuteButton.innerHTML = `<i class="fa-solid fa-volume-xmark"></i>`;
+      unmuteButton.addEventListener("click", () => {
+        if (landingTrailer.src.includes("&mute=1")) {
+          // Unmute: Remove the mute parameter
+          landingTrailer.src = landingTrailer.src.replace("&mute=1", "");
+          unmuteButton.innerHTML = `<i class="fa-solid fa-volume-high"></i>`; // Update button text
+        } else {
+          // Mute: Add the mute parameter
+          if (!landingTrailer.src.includes("&mute=1")) {
+            landingTrailer.src += "&mute=1";
+          }
+          unmuteButton.innerHTML = `<i class="fa-solid fa-volume-xmark"></i>`; // Update button text
+        }
+      });
+
+      posterSlider.appendChild(posterImage);
+      posterWrapper.appendChild(posterSlider);
+
+      landingLogoContainer.appendChild(landingLogo);
+      landingMetadata.appendChild(landingLogoContainer);
+      landingMetadata.appendChild(landingTagline);
+      landingMetadata.appendChild(landingTitle);
+
+      landingMetadata.appendChild(showDetailsContainer);
+      landingMetadata.appendChild(landingOverview);
+      landingMetadata.appendChild(unmuteButton);
+      backdropSlider.appendChild(landingTrailer);
+      backdropSlider.appendChild(landingMetadata);
+      backdropSlider.appendChild(backdropImage);
+      backdropWrapper.appendChild(backdropSlider);
+    }
+
+    function nah(data) {
+      const title = data.title || data.name;
+      const tagline = data.tagline || "";
+      const overview = data.overview || "";
+      const genre = data.genres[0];
+      const genreName = genre.name;
+      const vote = data.vote_average;
+      const season = data.seasons;
+      const yearReleased =
+        (data.release_date || data.first_air_date)?.split("-")[0] || "Unknown";
+
+      const runtimeInMinutes = data.runtime;
+      const runtime = runtimeInMinutes
+        ? `${Math.floor(runtimeInMinutes / 60)}h ${runtimeInMinutes % 60}m`
+        : `S${data.number_of_seasons}E${data.number_of_episodes}`;
+
+      return {
+        title,
+        tagline,
+        overview,
+        genreName,
+        yearReleased,
+        runtime,
+        vote,
+        season,
+      };
+    }
+
+    async function fetchWeekly() {
+      const mediaType = "movie";
+      const ENendpoint = `https://api.themoviedb.org/3/${mediaType}/popular?api_key=${apiKey}`;
+      try {
+        const response = await fetch(ENendpoint);
+        if (!response.ok) {
+          throw new Error("Not Found");
+        }
+        const data = await response.json();
+        const series = await Promise.all(
+          data.results.slice(0, 10).map(async (meow, index) => {
+            const number = index + 1;
+            const en = await fetchImages(meow.id, mediaType, "englishBackdrop");
+            displayEnglish(meow, number, en, mediaType);
+          })
+        );
+      } catch (error) {
+        console.error(error.message);
+      }
+      swiperIni2();
+      tamad();
+    }
+    function displayEnglish(meow, number, en, mediaType) {
+      const toptenwrapper = document.querySelector(".wrapper-topten");
+      const topTenSlide = document.createElement("div");
+      topTenSlide.classList.add("swiper-slide", "slide-topTen");
+
+      const numbering = document.createElement("h1");
+      numbering.className = "numbering";
+      numbering.textContent = number;
+      topTenSlide.appendChild(numbering);
+
+      const meoww = meowmeow(meow, en, mediaType);
+
+      topTenSlide.appendChild(meoww);
+      toptenwrapper.appendChild(topTenSlide);
+    }
+    function meowmeow(meow, en, mediaType) {
+      const yearReleased =
+        (meow.release_date || meow.first_air_date)?.split("-")[0] || "Unknown";
+      const hoverContainer = document.createElement("div");
+      hoverContainer.className = "hoverContainer";
+
+      const backdropImgContainer = document.createElement("div");
+      backdropImgContainer.className = "backdropImgContainer";
+      backdropImgContainer.innerHTML = `<div class='circular-progress slide-progress' data-bg-color='black' data-inner-circle-color='lightgrey' data-progress-color='crimson' data-rating='${
+        meow.vote_average
+      }'>
+                <div class='inner-circle slide-circle'></div>
+                <p class='rating slide-rating'>${meow.vote_average.toFixed(
+                  1
+                )}</p>
+              </div>`;
+      const backdropImg = document.createElement("img");
+      backdropImg.className = "companyImage";
+      backdropImg.dataset.src = en;
+      backdropImg.alt = meow.name || meow.title;
+      backdropImg.classList.add("lazy-load");
+
+      const companyInfo = document.createElement("div");
+      companyInfo.className = "companyInfo";
+      companyInfo.innerHTML = `
+          <div class="companyMeow">
+            <h5>${meow.name || meow.title} (${yearReleased})</h5>
+             <p>${meow.overview}</p>
+            </div>
+            <div class="companyArf">
+            <i id="play" class="fa-solid fa-play"></i>
+            <i class="fa-solid fa-circle-info"></i>
+            </div>
+          `;
+
+      hoverContainer.appendChild(companyInfo);
+      backdropImgContainer.appendChild(backdropImg);
+      hoverContainer.appendChild(backdropImgContainer);
+
+      const playNow = hoverContainer.querySelector("#play");
+      playNow.addEventListener("click", () => {
+        modal(meow, mediaType);
+      });
+
+      return hoverContainer;
+    }
+    function swiperIni2() {
+      const swiper2 = new Swiper(".top-ten-slides", {
+        slidesPerView: "auto",
+        loop: true,
+        centeredSlides: true,
+        initialSlide: 1, // Start from the second slide
+        spaceBetween: 57,
+        mousewheel: false, // Enable mousewheel control
+      });
+    }
+
+    async function fetchImages(id, mediaType, returnType) {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/${mediaType}/${id}/images?api_key=${apiKey}`
+      );
+      const data = await response.json();
+      const normal = data.backdrops.find((meow) => meow.iso_639_1 === null);
+      const normalUrl = normal
+        ? `https://image.tmdb.org/t/p/original/${normal.file_path}`
+        : "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibeodCS7BPOb9g45oi5UXnHI4lwGJECVpkbQTTZOSV4YTNkOWzY__ZQITNna1nBEiXMcATjNM20xtsKXbRPvejk1Rek-bRsp-ZiwOI5vyWMhYC_AEQodd_otWepiHkpG9zJCd0iABhb1iFFRuJXE6mSyWhy0xpQdv8IIZoOAl8aI1QBc4gRQxfvqim/s1600/%5BZXC%20STREAM%5D11.jpg";
+      const poster = data.posters.find((meow) => meow.iso_639_1 === "en");
+      const posterUrl = poster
+        ? `https://image.tmdb.org/t/p/w500/${poster.file_path}`
+        : "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibeodCS7BPOb9g45oi5UXnHI4lwGJECVpkbQTTZOSV4YTNkOWzY__ZQITNna1nBEiXMcATjNM20xtsKXbRPvejk1Rek-bRsp-ZiwOI5vyWMhYC_AEQodd_otWepiHkpG9zJCd0iABhb1iFFRuJXE6mSyWhy0xpQdv8IIZoOAl8aI1QBc4gRQxfvqim/s1600/%5BZXC%20STREAM%5D11.jpg";
+
+      const english = data.backdrops.find((meow) => meow.iso_639_1 === "en");
+      const englishUrl = english
+        ? `https://image.tmdb.org/t/p/w500/${english.file_path}`
+        : normalUrl ||
+          posterUrl ||
+          "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibeodCS7BPOb9g45oi5UXnHI4lwGJECVpkbQTTZOSV4YTNkOWzY__ZQITNna1nBEiXMcATjNM20xtsKXbRPvejk1Rek-bRsp-ZiwOI5vyWMhYC_AEQodd_otWepiHkpG9zJCd0iABhb1iFFRuJXE6mSyWhy0xpQdv8IIZoOAl8aI1QBc4gRQxfvqim/s1600/%5BZXC%20STREAM%5D11.jpg";
+      const englishLogo = data.logos.find((meow) => meow.iso_639_1 === "en");
+      const englishLogoUrl = englishLogo
+        ? `https://image.tmdb.org/t/p/w500/${englishLogo.file_path}`
+        : "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibeodCS7BPOb9g45oi5UXnHI4lwGJECVpkbQTTZOSV4YTNkOWzY__ZQITNna1nBEiXMcATjNM20xtsKXbRPvejk1Rek-bRsp-ZiwOI5vyWMhYC_AEQodd_otWepiHkpG9zJCd0iABhb1iFFRuJXE6mSyWhy0xpQdv8IIZoOAl8aI1QBc4gRQxfvqim/s1600/%5BZXC%20STREAM%5D11.jpg";
+
+      if (returnType === "englishBackdrop") {
+        return englishUrl;
+      } else if (returnType === "englishLogo") {
+        return englishLogoUrl;
+      } else if (returnType === "defaultBackdrop") {
+        return normalUrl;
+      } else if (returnType === "posterImage") {
+        return posterUrl;
+      }
+    }
+    async function fetchTrailer(id, mediaType) {
+      try {
+        const url = `https://api.themoviedb.org/3/${mediaType}/${id}/videos?api_key=${apiKey}&language=en-US`;
+        const response = await fetch(url);
+        const data = await response.json();
+        const trailer = data.results.find(
+          (video) => video.type === "Trailer" && video.site === "YouTube"
+        );
+        return trailer
+          ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&loop=1&playlist=${trailer.key}`
+          : `https://www.youtube.com/embed/xvFZjo5PgG0?si=3ucZG5-81DePDvtrD`;
+      } catch (error) {
+        console.error("Error fetching trailer:", error);
+        return "Error fetching trailer";
+      }
+    }
+    function initSwipers() {
+      const backdropSwiper = new Swiper(".backdropContainer", {
+        slidesPerView: "auto",
+        loop: true,
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: true,
+        },
+      });
+
+      // Initialize the poster swiper
+      const posterSwiper = new Swiper(".posterContainer", {
+        slidesPerView: "1",
+        loop: true,
+        spaceBetween: 20,
+        centeredSlides: "true",
+        loopedSlides: 3,
+
+        controller: {
+          control: backdropSwiper,
+        },
+      });
+
+      backdropSwiper.controller.control = posterSwiper;
+
+      const updateTrailerForActiveSlide = () => {
+        const allSlides = document.querySelectorAll(".backdrop-slide");
+        allSlides.forEach((slide) => {
+          const iframe = slide.querySelector(".landingTrailer");
+          if (iframe) {
+            if (slide.classList.contains("swiper-slide-active")) {
+              setTimeout(() => {
+                iframe.src = iframe.dataset.trailerSrc; // Set trailer source for the active slide.
+              }, 10000); // Delay for 3 seconds (adjust as needed)
+            } else {
+              iframe.src = ""; // Clear the source for non-active slides.
+            }
+          }
+        });
+      };
+
+      // Listen for changes in the active slide.
+      backdropSwiper.on(
+        "slideChangeTransitionEnd",
+        updateTrailerForActiveSlide
+      );
+
+      // Initialize the trailer for the initial active slide.
+      updateTrailerForActiveSlide();
+    }
+    function tamad() {
+      const tamadpiktur = document.querySelectorAll("img.lazy-load");
+
+      const observer = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              img.src = img.dataset.src;
+              img.classList.remove("lazy-load");
+              observer.unobserve(img);
+            }
+          });
+        },
+        { threshold: 0.01 }
+      );
+
+      tamadpiktur.forEach((Image) => {
+        observer.observe(Image);
+      });
+    }
+    const companies = [
+      {
+        networkId: "213",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png",
+      },
+      {
+        networkId: "6219",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/4/49/MGM%2B_logo.svg",
+      },
+      {
+        networkId: "1024",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg",
+      },
+
+      {
+        networkId: "2739",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg",
+      },
+      {
+        networkId: "2552",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/2/28/Apple_TV_Plus_Logo.svg",
+      },
+      {
+        networkId: "3353",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/d/d3/NBCUniversal_Peacock_Logo.svg",
+      },
+      {
+        networkId: "13",
+        logoLink:
+          "https://upload.wikimedia.org/wikipedia/commons/7/7a/Nickelodeon_2009_logo.svg",
+      },
+    ];
+    async function companiesLoop() {
+      for (const company of companies) {
+        await fetchCompanies(company.networkId, company.logoLink);
+        // await new Promise((resolve) => setTimeout(resolve, 1));
+      }
+      tamad();
+    }
+    async function fetchCompanies(networkId, networkLogoLink) {
+      const mediaType = "tv";
+      const endpoint = `https://api.themoviedb.org/3/discover/${mediaType}?api_key=${apiKey}&with_networks=${networkId}`;
+
+      try {
+        const response = await fetch(endpoint);
+        if (!response.ok) {
+          throw new Error("Error fetching network data");
+        }
+        const data = await response.json();
+
+        const series = await Promise.all(
+          data.results.map(async (seriesItem) => {
+            // console.log(seriesItem);
+
+            const englishBackdropUrl = await fetchImages(
+              seriesItem.id,
+              mediaType,
+              "englishBackdrop"
+            );
+
+            // console.log(companyTrailer)
+
+            return {
+              id: seriesItem.id,
+              overview: seriesItem.overview,
+              plainbackdropUrl: `https://image.tmdb.org/t/p/w1280/${seriesItem.backdrop_path}`,
+              posterUrl: `https://image.tmdb.org/t/p/w1280/${seriesItem.poster_path}`,
+              name: seriesItem.name,
+              backdropUrl: englishBackdropUrl,
+              mediaType: mediaType,
+              vote_average: seriesItem.vote_average,
+              first_air_date: seriesItem.first_air_date,
+              countryOrigin: seriesItem.origin_country[0],
+            };
+          })
+        );
+
+        displayCompanies(networkId, networkLogoLink, series);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    function displayCompanies(networkId, logoLink, series) {
+      const companiesContainer = document.querySelector(".companiesContainer");
+      // Create network section
+      const networkSection = document.createElement("div");
+      networkSection.classList.add("network-section");
+
+      // Add network logo
+      const logoImg = document.createElement("img");
+      logoImg.className = "logoCompanyImg";
+      logoImg.dataset.src = logoLink;
+      logoImg.alt = "Network Logo";
+      logoImg.classList.add("lazy-load");
+
+      // Create Swiper container
+      const swiperContainer = document.createElement("div");
+      swiperContainer.classList.add("swiper-container");
+      swiperContainer.id = `swiper-${networkId}`;
+
+      const swiperWrapper = document.createElement("div");
+      swiperWrapper.classList.add("swiper-wrapper");
+
+      // Populate Swiper with series
+      series.forEach((seriesItem) => {
+        if (seriesItem.backdropUrl) {
+          const swiperSlide = document.createElement("div");
+          swiperSlide.className = "companySlide";
+          swiperSlide.classList.add("swiper-slide");
+
+          const meow = meowmeow(seriesItem, seriesItem.backdropUrl, "tv");
+
+          swiperSlide.appendChild(meow);
+          swiperWrapper.appendChild(swiperSlide);
+          console.log();
+        }
+        initializeProgressBars();
+      });
+
+      swiperContainer.appendChild(swiperWrapper);
+      networkSection.appendChild(logoImg);
+      networkSection.appendChild(swiperContainer);
+      companiesContainer.appendChild(networkSection);
+
+      // Initialize Swiper
+      new Swiper(`#swiper-${networkId}`, {
+        slidesPerView: "auto",
+        spaceBetween: 20,
+        loop: true,
+        navigation: {
+          nextEl: `.swiper-button-next-${networkId}`,
+          prevEl: `.swiper-button-prev-${networkId}`,
+        },
+        pagination: {
+          el: `.swiper-pagination-${networkId}`,
+          clickable: true,
+        },
+      });
+    }
+    function initializeProgressBars() {
+      document.querySelectorAll(".circular-progress").forEach((progressBar) => {
+        const ratingValue = parseFloat(progressBar.getAttribute("data-rating"));
+        const progressColor = progressBar.getAttribute("data-progress-color");
+        const bgColor = progressBar.getAttribute("data-bg-color");
+
+        // Set the background based on the rating instantly
+        progressBar.style.background = `conic-gradient(
+                    ${progressColor} ${ratingValue * 36}deg,
+                    ${bgColor} ${ratingValue * 36}deg
+                )`;
+      });
+    }
+    async function fetchShows(id, mediaType) {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/${mediaType}/${id}?api_key=${apiKey}`
+      );
+      const data = await response.json();
+
+      const formattedData = nah(data);
+
+      const backdrop = await fetchImages(id, mediaType, "defaultBackdrop");
+
+      const en = await fetchImages(id, mediaType, "englishBackdrop");
+
+      const logo = await fetchImages(id, mediaType, "englishLogo");
+
+      const poster = await fetchImages(id, mediaType, "posterImage");
+
+      const trailerUrl = await fetchTrailer(id, mediaType);
+      return {
+        data,
+        id,
+        title: formattedData.title,
+        tagline: formattedData.tagline,
+        overview: formattedData.overview,
+        genre: formattedData.genreName,
+        year: formattedData.yearReleased,
+        run: formattedData.runtime,
+        vote: formattedData.vote,
+        season: formattedData.season,
+        backdrop,
+        poster,
+        logo,
+        trailer: trailerUrl,
+        mediaType,
+        english: en,
+      };
+    }
+    landingShows(showlist);
+    fetchWeekly();
+    companiesLoop();
+  </script>
+  <script>
+    const openModal = document.querySelector(".modal");
+    const closeModal = document.getElementById("closeModal");
+    const overviewContainer = document.querySelector(".overviewContainer");
+    const buttonTrailer = document.getElementById("buttonTrailer");
+    const buttonOverview = document.getElementById("buttonOverview");
+    const buttonEpisodes = document.getElementById("buttonEpisodes");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalPoster = document.getElementById("modalPoster");
+    const progressBarRating = document.getElementById("progressBarRating");
+    const countryOriginContainer = document.getElementById(
+      "countryOriginContainer"
+    );
+    const MediaTypeContainer = document.getElementById("MediaTypeContainer");
+    const yearReleasedContainer = document.getElementById(
+      "yearReleasedContainer"
+    );
+
+    async function modal(data, mediaType) {
+      openModal.classList.add("modal-active");
+      const dataShows = await fetchShows(data.id, mediaType);
+      modalTitle.innerText = dataShows.title;
+      modalPoster.src = dataShows.poster;
+      modalPoster.alt = dataShows.title;
+      countryOriginContainer.innerText = dataShows.genre;
+      yearReleasedContainer.innerText = dataShows.run;
+      MediaTypeContainer.innerText = dataShows.year;
+      if (dataShows.vote) {
+        // Create the circular-progress div
+        const circularProgress = document.createElement("div");
+        circularProgress.className = "circular-progress modal-progress";
+        circularProgress.setAttribute("data-bg-color", "black");
+        circularProgress.setAttribute("data-inner-circle-color", "lightgrey");
+        circularProgress.setAttribute("data-progress-color", "crimson");
+        circularProgress.setAttribute("data-rating", dataShows.vote);
+
+        // Create the inner-circle div
+        const innerCircle = document.createElement("div");
+        innerCircle.className = "inner-circle modal-circle";
+
+        // Create the rating paragraph
+        const ratingParagraph = document.createElement("p");
+        ratingParagraph.className = "rating modal-rating";
+        ratingParagraph.textContent = dataShows.vote.toFixed(1);
+
+        // Append inner-circle and rating paragraph to circular-progress
+        circularProgress.appendChild(innerCircle);
+        circularProgress.appendChild(ratingParagraph);
+
+        // Append the circular-progress to the progressBarRating container
+        progressBarRating.appendChild(circularProgress);
+        initializeProgressBars();
+      } else {
+      }
+      if (dataShows.overview) {
+        buttonOverview.classList.add("button-active");
+        buttonTrailer.classList.remove("button-active");
+        buttonEpisodes.classList.remove("button-active");
+        const overviewText = document.createElement("p");
+        overviewText.innerText = dataShows.overview;
+        buttonOverview.addEventListener("click", () => {
+          buttonOverview.classList.add("button-active");
+          buttonTrailer.classList.remove("button-active");
+          buttonEpisodes.classList.remove("button-active");
+          overviewContainer.innerHTML = "";
+          overviewText.innerText = dataShows.overview;
+          overviewContainer.appendChild(overviewText);
+        });
+        overviewContainer.appendChild(overviewText);
+      } else {
+      }
+
+      if (mediaType === "tv") {
+        buttonEpisodes.style.display = "block";
+
+        const selectDropdown = document.createElement("select");
+        selectDropdown.className = "season-dropdown";
+
+        const episodeContainer = document.createElement("div");
+        episodeContainer.className = "episodeWrapper";
+
+        const seasonData = dataShows.season;
+        console.log(dataShows.season);
+
+        // Populate the dropdown with seasons
+        seasonData.forEach((season) => {
+          const option = document.createElement("option");
+          option.value = season.season_number;
+          option.textContent = season.name;
+          selectDropdown.appendChild(option);
+        });
+
+        const populateEpisodes = async (seasonNumber) => {
+          const episodeDetails = await fetchSeasonDetails(
+            dataShows.id,
+            seasonNumber
+          );
+          episodeContainer.innerHTML = ""; // Clear existing episodes
+
+          episodeDetails.episodes.forEach((episode) => {
+            const episodePosterUrl = episode.still_path
+              ? `https://image.tmdb.org/t/p/w500/${episode.still_path}`
+              : "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibeodCS7BPOb9g45oi5UXnHI4lwGJECVpkbQTTZOSV4YTNkOWzY__ZQITNna1nBEiXMcATjNM20xtsKXbRPvejk1Rek-bRsp-ZiwOI5vyWMhYC_AEQodd_otWepiHkpG9zJCd0iABhb1iFFRuJXE6mSyWhy0xpQdv8IIZoOAl8aI1QBc4gRQxfvqim/s1600/%5BZXC%20STREAM%5D11.jpg";
+            const episodesPopulate = document.createElement("div");
+            episodesPopulate.className = "episodeContainer";
+            const episodeImageContainer = document.createElement("div");
+            episodeImageContainer.className = "episodeImageContainer";
+            const episodeTextContainer = document.createElement("div");
+            episodeTextContainer.className = "episodeTextContainer";
+
+            const episodeTitle = document.createElement("h3");
+            const episodeOverview = document.createElement("p");
+            const episodePoster = document.createElement("img");
+
+            episodeTitle.innerText = episode.name;
+            episodePoster.dataset.src = episodePosterUrl;
+            episodePoster.alt = episode.name;
+            episodePoster.classList.add("lazy-load");
+            episodeOverview.innerText = episode.overview;
+
+            episodeTextContainer.appendChild(episodeTitle);
+            episodeTextContainer.appendChild(episodeOverview);
+            episodeImageContainer.appendChild(episodePoster);
+            episodesPopulate.appendChild(episodeImageContainer);
+            episodesPopulate.appendChild(episodeTextContainer);
+
+            episodeContainer.appendChild(episodesPopulate);
+          });
+          tamad();
+        };
+
+        // Populate episodes for the default season (first season)
+        await populateEpisodes(seasonData[0].season_number);
+
+        // Event listener for dropdown change
+        selectDropdown.addEventListener("change", async (e) => {
+          const selectedSeasonNumber = e.target.value;
+          await populateEpisodes(selectedSeasonNumber);
+        });
+
+        buttonEpisodes.addEventListener("click", () => {
+          buttonOverview.classList.remove("button-active");
+          buttonTrailer.classList.remove("button-active");
+          buttonEpisodes.classList.add("button-active");
+          overviewContainer.innerHTML = "";
+          overviewContainer.appendChild(selectDropdown);
+          overviewContainer.appendChild(episodeContainer);
+          tamad();
+        });
+      }
+
+      const trailerUrl = await fetchTrailer(dataShows.id, mediaType);
+
+      if (trailerUrl) {
+        const iframe = document.createElement("iframe");
+        iframe.setAttribute("width", "100%");
+        iframe.setAttribute("height", "100%");
+        iframe.setAttribute("src", trailerUrl);
+        iframe.setAttribute("frameborder", "0");
+        iframe.setAttribute(
+          "allow",
+          "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+        );
+        iframe.setAttribute("allowfullscreen", "");
+
+        buttonTrailer.addEventListener("click", () => {
+          buttonEpisodes.classList.remove("button-active");
+          buttonOverview.classList.remove("button-active");
+          buttonTrailer.classList.add("button-active");
+          overviewContainer.innerHTML = "";
+          overviewContainer.appendChild(iframe);
+        });
+      } else {
+      }
+
+      openModal.style.backgroundImage = `url(${dataShows.backdrop})`;
+
+      closeModal.addEventListener("click", () => {
+        openModal.classList.remove("modal-active");
+        modalTitle.innerText = "";
+        modalPoster.src = "";
+        overviewContainer.innerHTML = "";
+        progressBarRating.innerHTML = "";
+        countryOriginContainer.innerHTML = "";
+        yearReleasedContainer.innerHTML = "";
+        MediaTypeContainer.innerHTML = "";
+        openModal.style.backgroundImage = `url("")`;
+        buttonEpisodes.style.display = "none";
+      });
+    }
+
+    async function fetchSeasonDetails(tvId, selectedSeasonNumber) {
+      const episodes = "1";
+      const seasonDetailsUrl = `https://api.themoviedb.org/3/tv/${tvId}/season/${selectedSeasonNumber}?api_key=${apiKey}`;
+      const response = await fetch(seasonDetailsUrl);
+      const data = await response.json();
+      return data;
+    }
+  </script>
 </html>
