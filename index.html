@@ -3,577 +3,63 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
-      integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,0,0&icon_names=search"
     />
-    <link rel="stylesheet" href="sharedCSS.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Document</title>
+    <link rel="stylesheet" href="zxcstream_final.css" />
     <style>
-      .lines {
-        position: absolute;
+      * {
+        /* border: 1px solid red; */
+      }
+      .aesthetic {
+        z-index: -1;
+        position: fixed;
         top: 0;
         left: 0;
-        right: 0;
-        height: 100%;
-        margin: auto;
-        width: 90vw;
-      }
-
-      .line {
-        position: absolute;
-        width: 1px;
-        height: 100%;
-        top: 0;
-        left: 50%;
-        background: rgba(255, 255, 255, 0.1);
-        overflow: hidden;
-      }
-
-      .line::after {
-        content: "";
-        display: block;
-        position: absolute;
-        height: 15vh;
+        height: 100vh;
         width: 100%;
-        top: -50%;
-        left: 0;
-        background: linear-gradient(
-          to bottom,
-          rgba(255, 255, 255, 0) 0%,
-          #ffffff 75%,
-          #ffffff 100%
-        );
-        animation: drop 7s 0s infinite;
-        animation-fill-mode: forwards;
-        animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
-      }
-
-      .line:nth-child(1) {
-        margin-left: -25%;
-      }
-
-      .line:nth-child(1)::after {
-        animation-delay: 2s;
-      }
-
-      .line:nth-child(3) {
-        margin-left: 25%;
-      }
-
-      .line:nth-child(3)::after {
-        animation-delay: 2.5s;
-      }
-
-      @keyframes drop {
-        0% {
-          top: -50%;
-        }
-        100% {
-          top: 110%;
-        }
-      }
-
-      body {
-        min-height: 100vh;
-        width: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='1.5' fill='white' /%3E%3C/svg%3E");
+        background-repeat: repeat;
+        background-size: 20px 20px;
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
+        align-items: center;
+        overflow: hidden;
         background-color: #0d0d0d;
+        pointer-events: none;
       }
-      body::-webkit-scrollbar {
-        display: none;
-      }
-      body::before,
-      body::after {
-        position: fixed;
-        background: linear-gradient(
-          to bottom,
-          #0b0b1a,
-          rgba(255, 255, 255, 0) 100%
-        );
+      .aesthetic::after {
         content: "";
-        height: 30%;
-        width: 100%;
-        z-index: 1;
-      }
-
-      body::before {
-        top: 0;
-      }
-      body::after {
-        bottom: 0;
-        transform: rotate(180deg);
-      }
-
-      .search-container {
-        margin-top: 200px;
-        width: 95%;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        gap: 50px;
-        z-index: 2;
-      }
-      #searchInput {
-        padding: 10px 20px;
-        width: 80%;
-        font-size: 16px;
-        margin-bottom: 20px;
-        border: 1px solid #0b0b1a;
-        border-radius: 12px;
-        outline: none;
-      }
-      .search-movie-card {
-        width: 200px;
-        height: 270px;
-        text-align: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        opacity: 0;
-        transform: translateY(20px);
-        filter: blur(5px);
-        transition: all 0.5s ease-out;
-      }
-      .search-movie-card.show {
-        opacity: 1;
-        transform: translateY(0);
-        filter: blur(0);
-      }
-      .search-movie-card:hover img {
-        transform: scale(1.1);
-      }
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-        transition: 0.5s;
-      }
-      #search-results-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 20px;
-      }
-      #search-no-results {
-        display: none;
-        font-size: 18px;
-        color: #777;
-        margin-top: 20px;
-      }
-      .typing {
-        font-family: "Courier New", Courier, monospace;
-        white-space: nowrap;
-        color: #e8e8e8;
-        font-size: 2rem;
-        overflow: hidden;
-        border-right: 2px solid #fff;
-        animation: typing 2s steps(30, end), blink 0.5s step-end infinite;
-      }
-      @keyframes typing {
-        from {
-          width: 0;
-        }
-        to {
-          width: 42.5%;
-        }
-      }
-      @keyframes blink {
-        50% {
-          border-color: transparent;
-        }
-      }
-      .slider-container {
-        position: sticky;
-        top: 0;
-        left: 0;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        z-index: 1;
-        height: 100vh;
-      }
-
-      .slider {
-        height: 100vh;
-        width: 150px;
-        overflow: hidden;
-      }
-
-      .slider-track {
-        display: flex;
-        flex-direction: column;
-        animation: scroll 40s linear infinite;
-        gap: 10px;
-      }
-
-      .slider-track.reverse {
-        animation-direction: reverse;
-      }
-
-      @keyframes scroll {
-        0% {
-          transform: translateY(0);
-        }
-        100% {
-          transform: translateY(calc(-200px * 6));
-        }
-      }
-
-      .slider-track:hover {
-        animation-play-state: paused;
-      }
-
-      .slide {
-        height: 200px;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-        overflow: hidden;
-        border-radius: 8px;
-        border: 1px solid #5858cc;
-      }
-
-      img {
-        width: 100%;
-        object-fit: cover;
-        object-position: center;
-        height: 100%;
-        border-radius: 8px;
-      }
-      .overlay {
-        position: fixed;
-        height: 100vh;
-        width: 100%;
-        background: #0d0d0dbc;
-        z-index: 1;
-        /* backdrop-filter: blur(10px); */
-      }
-
-      @media only screen and (max-width: 768px) {
-        .slider-container {
-          position: absolute;
-          width: 100%;
-          pointer-events: none;
-        }
-        .typing {
-          font-size: 1.6rem;
-          animation: typing 1s steps(20, end), blink 0.5s step-end infinite;
-        }
-        #searchInput {
-          width: 95%;
-          font-size: 16px;
-          margin-bottom: 20px;
-          border-radius: 50px;
-        }
-        .search-movie-card {
-          width: 140px;
-          height: 190px;
-        }
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle,
+          rgba(20, 20, 20, 0) 0%,
+          rgba(0, 0, 0, 1) 79%
+        );
+        pointer-events: none;
       }
     </style>
   </head>
-  <body>
-    <div class="lines">
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-    </div>
-    <div class="slider-container">
-      <div class="slider">
-        <div class="slider-track">
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/dfF6LZ8JtBoqIXMzDvBE3ggY7jY.jpg"
-              alt="Image 1"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/oDYvDCcTbIc6FzaGImWUb6nZGIp.jpg"
-              alt="Image 2"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/zQc1PITqFxZDbEmHlQgO5Mxc4Od.jpg"
-              alt="Image 3"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/k7bclFV4hWIdgNcLileBKGWFIa9.jpg"
-              alt="Image 4"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/wIGJnIFQlESkC2rLpfA8EDHqk4g.jpg"
-              alt="Image 5"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/58QT4cPJ2u2TqWZkterDq9q4yxQ.jpg"
-              alt="Image 6"
-            />
-          </div>
 
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/dfF6LZ8JtBoqIXMzDvBE3ggY7jY.jpg"
-              alt="Image 1"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/oDYvDCcTbIc6FzaGImWUb6nZGIp.jpg"
-              alt="Image 2"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/zQc1PITqFxZDbEmHlQgO5Mxc4Od.jpg"
-              alt="Image 3"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/k7bclFV4hWIdgNcLileBKGWFIa9.jpg"
-              alt="Image 4"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/wIGJnIFQlESkC2rLpfA8EDHqk4g.jpg"
-              alt="Image 5"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/58QT4cPJ2u2TqWZkterDq9q4yxQ.jpg"
-              alt="Image 6"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="slider">
-        <div class="slider-track reverse">
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/ineLOBPG8AZsluYwnkMpHRyu7L.jpg"
-              alt="Image 1"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/zO5xURaYgMX6WpXolp83zVk03Yh.jpg"
-              alt="Image 2"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/g4CzzEmiNrGGeR4yv1CQtNGxFBs.jpg"
-              alt="Image 3"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/1NxaSn4ver4jIvLeD7YF8cTlZjB.jpg"
-              alt="Image 4"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://m.media-amazon.com/images/I/41nK6uN99xL._SL500_.jpg"
-              alt="Image 5"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/pnrv8tfOcWxu4CrB8N7xK0jYJsR.jpg"
-              alt="Image 6"
-            />
-          </div>
-
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/ineLOBPG8AZsluYwnkMpHRyu7L.jpg"
-              alt="Image 1"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/zO5xURaYgMX6WpXolp83zVk03Yh.jpg"
-              alt="Image 2"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/g4CzzEmiNrGGeR4yv1CQtNGxFBs.jpg"
-              alt="Image 3"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/1NxaSn4ver4jIvLeD7YF8cTlZjB.jpg"
-              alt="Image 4"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://m.media-amazon.com/images/I/41nK6uN99xL._SL500_.jpg"
-              alt="Image 5"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/pnrv8tfOcWxu4CrB8N7xK0jYJsR.jpg"
-              alt="Image 6"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="slider">
-        <div class="slider-track">
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/ooikdDNDOHS8hCURplWeTW7FzHJ.jpg"
-              alt="Image 1"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/iuRJ2QRRNMIu2VdEIuLIaJvt1PZ.jpg"
-              alt="Image 2"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/8RtwL5gxUvh9YViqjhNlVRvJpum.jpg"
-              alt="Image 3"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/iljKqptaX37Rr4B5z3ubo45HhhD.jpg"
-              alt="Image 4"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/3N0xWUDlR5Nq4zV7w69hfCWMbJO.jpg"
-              alt="Image 5"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/ha0SrDi69IIlb8Q9oJIZt8biVWr.jpg"
-              alt="Image 6"
-            />
-          </div>
-
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/ooikdDNDOHS8hCURplWeTW7FzHJ.jpg"
-              alt="Image 1"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/iuRJ2QRRNMIu2VdEIuLIaJvt1PZ.jpg"
-              alt="Image 2"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/8RtwL5gxUvh9YViqjhNlVRvJpum.jpg"
-              alt="Image 3"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/iljKqptaX37Rr4B5z3ubo45HhhD.jpg"
-              alt="Image 4"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/3N0xWUDlR5Nq4zV7w69hfCWMbJO.jpg"
-              alt="Image 5"
-            />
-          </div>
-          <div class="slide">
-            <img
-              src="https://image.tmdb.org/t/p/w500/ha0SrDi69IIlb8Q9oJIZt8biVWr.jpg"
-              alt="Image 6"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="overlay"></div>
-    <div class="modal">
-      <i
-        id="closeModal"
-        style="
-          position: absolute;
-          left: 0;
-          top: 0;
-          color: whitesmoke;
-          padding: 20px;
-          font-size: 2rem;
-        "
-        class="fa-solid fa-arrow-left-long"
-      ></i>
-      <div class="posterContainer">
-        <img id="modalPoster" src="" />
-      </div>
-      <div class="informationContainer">
-        <div class="titleContainer">
-          <div
-            style="
-              width: calc(100% - 120px);
-              display: flex;
-              justify-content: center;
-              flex-direction: column;
-              gap: 10px;
-              padding: 10px;
-            "
-          >
-            <h1 id="modalTitle"></h1>
-            <div style="display: flex; padding: 10px">
-              <p id="countryOriginContainer">Year</p>
-              &nbsp; | &nbsp;
-              <p id="yearReleasedContainer"></p>
-              &nbsp; | &nbsp;
-              <p style="text-transform: uppercase" id="MediaTypeContainer"></p>
-            </div>
-          </div>
-          <div id="progressBarRating"></div>
-        </div>
-        <div class="buttonsContainer">
-          <button id="buttonOverview">Overview</button>
-          <button id="buttonEpisodes" style="display: none">Episodes</button>
-          <button id="buttonTrailer">Trailers</button>
-          <button>Images</button>
-        </div>
-        <div class="overviewContainer"></div>
-      </div>
-    </div>
+  <body
+    style="
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      gap: 100px;
+    "
+  >
+    <div class="aesthetic"></div>
     <header>
       <div class="brandLogoContainer">
         <img
@@ -584,12 +70,12 @@
       </div>
 
       <nav>
-        <a href="/home.html" class="home">
+        <div class="home">
           <div class="sidebar-logo">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -603,13 +89,13 @@
             </svg>
           </div>
           <p>Home</p>
-        </a>
+        </div>
         <a href="/movie.html" class="movies">
           <div class="sidebar-logo">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -632,8 +118,8 @@
           <div class="sidebar-logo">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -648,16 +134,17 @@
           </div>
           <p>Series</p>
         </a>
-        <div style="color: red" class="searchFunction">
+        <a href="/search.html" class="searchFunction">
           <div class="sidebar-logo">
             <svg
+              style="color: crimson"
               stroke="currentColor"
               fill="currentColor"
               stroke-width="0"
               viewBox="0 0 24 24"
               class="style_inactive__EPRfk"
-              height="24"
-              width="24"
+              width="20"
+              height="20"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
@@ -666,120 +153,224 @@
             </svg>
           </div>
           <p>Search</p>
-        </div>
+        </a>
       </nav>
     </header>
-    <div class="search-container">
-      <h1 class="typing">WHAT ARE YOU WATCHING TODAY?</h1>
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Search your favorite show ..."
-      />
-      <div id="search-results-container"></div>
-      <div id="search-no-results">No results found.</div>
-    </div>
-    <script src="/apikey.js"></script>
 
-    <script src="/FETCHSHOW.js"></script>
-    <script src="/FETCHIMAGES.js"></script>
-
-    <script src="/LAZYLOAD.js"></script>
-
-    <script src="/MODAL.js"></script>
-
-    <script>
-      const searchInput = document.getElementById("searchInput");
-      const resultsContainer = document.getElementById(
-        "search-results-container"
-      );
-      const noResults = document.getElementById("search-no-results");
-
-      let currentPage = 1; // Track current page
-      let currentQuery = ""; // Track current query
-      let isFetching = false; // Prevent multiple simultaneous fetches
-
-      const searchFetchMovies = async (query, page = 1) => {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${query}&language=en-US&page=${page}`
-        );
-        const data = await response.json();
-        return data.results.filter(
-          (movie) => movie.poster_path && movie.vote_average > 0
-        );
-      };
-
-      const searchDisplayMovies = (movies) => {
-        if (movies.length === 0 && currentPage === 1) {
-          noResults.style.display = "block";
-          return;
-        } else {
-          noResults.style.display = "none";
+    <style>
+      .typing {
+        padding: 0 10px;
+        text-align: center;
+        white-space: nowrap;
+        color: #e8e8e8;
+        font-size: clamp(1rem, 0.9781rem + 1.0959vw, 1.8rem);
+        overflow: hidden;
+        font-weight: 500;
+        border-right: 2px solid #fff;
+        animation: typing 2s steps(30, end), blink 1s step-end infinite;
+      }
+      @keyframes typing {
+        from {
+          width: 0;
         }
+        to {
+          width: 100%;
+        }
+      }
+      @keyframes blink {
+        50% {
+          border-color: transparent;
+        }
+      }
+      .inputContainer {
+        position: relative;
+        width: 40%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-direction: column;
+        height: 350px;
+        gap: 50px;
+      }
+      #searchInput {
+        width: 100%;
+        padding: 15px 50px;
+        border-radius: 25px;
+        border: 0;
+        outline: none;
+      }
+      .search-movie-card {
+        width: 180px;
+        height: 240px;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transform: translateY(20px);
+        filter: blur(5px);
+        transition: all 0.5s ease-out;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .search-movie-card.show {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+      .search-movie-card:hover img {
+        transform: scale(1.1);
+      }
+      .search-movie-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        transition: 0.5s;
+      }
 
-        movies.forEach((movie, index) => {
-          const movieCard = document.createElement("div");
-          movieCard.classList.add("search-movie-card");
-          const movieImageBackdrop = `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`;
-          const movieImage = `https://image.tmdb.org/t/p/w1280${movie.poster_path}`;
-          movieCard.innerHTML = `
+      #search-results-container {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        width: 90%;
+        padding: 10px;
+        height: 100%;
+        justify-content: center;
+      }
+      @media only screen and (max-width: 768px) {
+        .inputContainer {
+          width: 90%;
+        }
+        #search-results-container {
+          width: 100%;
+        }
+        .search-movie-card {
+          width: 140px;
+          height: 200px;
+          border-radius: 8px;
+        }
+      }
+    </style>
+
+    <div class="inputContainer">
+      <h1 class="typing">What would you like to watch tonight?</h1>
+      <div
+        style="
+          position: relative;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <span
+          style="position: absolute; left: 15px"
+          class="material-symbols-rounded"
+        >
+          search
+        </span>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="What do you want to watch?"
+        />
+      </div>
+    </div>
+
+    <div id="search-results-container"></div>
+    <div id="search-no-results">No results found.</div>
+  </body>
+  <script>
+    const apiKey = "47a1a7df542d3d483227f758a7317dff";
+    const searchInput = document.getElementById("searchInput");
+    const resultsContainer = document.getElementById(
+      "search-results-container"
+    );
+    const noResults = document.getElementById("search-no-results");
+
+    let currentPage = 1; // Track current page
+    let currentQuery = ""; // Track current query
+    let isFetching = false; // Prevent multiple simultaneous fetches
+
+    const searchFetchMovies = async (query, page = 1) => {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${query}&language=en-US&page=${page}`
+      );
+      const data = await response.json();
+      return data.results.filter(
+        (movie) => movie.poster_path && movie.vote_average > 0
+      );
+    };
+
+    const searchDisplayMovies = (movies) => {
+      if (movies.length === 0 && currentPage === 1) {
+        noResults.style.display = "block";
+        return;
+      } else {
+        noResults.style.display = "none";
+      }
+
+      movies.forEach((movie, index) => {
+        const movieCard = document.createElement("div");
+        movieCard.classList.add("search-movie-card");
+        const movieImageBackdrop = `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`;
+        const movieImage = `https://image.tmdb.org/t/p/w1280${movie.poster_path}`;
+        movieCard.innerHTML = `
           <img src="${movieImage}" alt="${movie.title || movie.name}" />
         `;
 
-          resultsContainer.appendChild(movieCard);
+        resultsContainer.appendChild(movieCard);
 
-          movieCard.addEventListener("click", () => {
-            modal(
-              movie.id,
-              movie.overview,
-              movieImageBackdrop,
-              movieImage,
-              movie.name || movie.title,
-              movie.media_type,
-              movie.vote_average,
-              movie.release_date || movie.first_air_date,
-              movie.original_language
-            );
-          });
-
-          setTimeout(() => {
-            movieCard.classList.add("show");
-          }, index * 100);
+        movieCard.addEventListener("click", () => {
+          modal(
+            movie.id,
+            movie.overview,
+            movieImageBackdrop,
+            movieImage,
+            movie.name || movie.title,
+            movie.media_type,
+            movie.vote_average,
+            movie.release_date || movie.first_air_date,
+            movie.original_language
+          );
         });
-      };
 
-      const loadMoreMovies = async () => {
-        if (!currentQuery || isFetching) return;
+        setTimeout(() => {
+          movieCard.classList.add("show");
+        }, index * 100);
+      });
+    };
 
-        isFetching = true;
-        currentPage++;
+    const loadMoreMovies = async () => {
+      if (!currentQuery || isFetching) return;
+
+      isFetching = true;
+      currentPage++;
+      const movies = await searchFetchMovies(currentQuery, currentPage);
+      searchDisplayMovies(movies);
+      isFetching = false;
+    };
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } =
+        document.documentElement;
+      if (scrollTop + clientHeight >= scrollHeight - 10) {
+        loadMoreMovies();
+      }
+    };
+
+    searchInput.addEventListener("input", async (event) => {
+      currentQuery = event.target.value;
+      currentPage = 1;
+      resultsContainer.innerHTML = "";
+
+      if (currentQuery.length >= 1) {
         const movies = await searchFetchMovies(currentQuery, currentPage);
         searchDisplayMovies(movies);
-        isFetching = false;
-      };
+      } else {
+        noResults.style.display = "none";
+      }
+    });
 
-      const handleScroll = () => {
-        const { scrollTop, scrollHeight, clientHeight } =
-          document.documentElement;
-        if (scrollTop + clientHeight >= scrollHeight - 10) {
-          loadMoreMovies();
-        }
-      };
-
-      searchInput.addEventListener("input", async (event) => {
-        currentQuery = event.target.value;
-        currentPage = 1;
-        resultsContainer.innerHTML = "";
-
-        if (currentQuery.length >= 1) {
-          const movies = await searchFetchMovies(currentQuery, currentPage);
-          searchDisplayMovies(movies);
-        } else {
-          noResults.style.display = "none";
-        }
-      });
-
-      window.addEventListener("scroll", handleScroll);
-    </script>
-  </body>
+    window.addEventListener("scroll", handleScroll);
+  </script>
 </html>
