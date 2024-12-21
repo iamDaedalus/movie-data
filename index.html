@@ -93,7 +93,8 @@
           transform: translateY(0);
         }
 
-        .backdropImgContainer:hover & {
+        .backdropImgContainer:hover &,
+        .posterContainerModal:hover & {
           .triangle {
             stroke-dashoffset: 0;
             opacity: 1;
@@ -189,6 +190,9 @@
         transition: 0.3s;
         transition-delay: 10.2s;
       }
+      .visibilityButton {
+        display: none;
+      }
 
       .backdrop-slide::after {
         content: "";
@@ -215,8 +219,8 @@
 
       .posterContainer {
         position: absolute;
-        height: 280px;
-        width: 210px;
+        height: 250px;
+        width: 190px;
         align-items: center;
         justify-content: center;
         z-index: 1;
@@ -410,6 +414,10 @@
         border: 1px solid rgb(74, 74, 74);
         border-radius: 12px;
         overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
       }
       .posterContainerModal img {
         height: 100%;
@@ -570,6 +578,12 @@
           height: 50px;
         }
       }
+      #modalPoster {
+        transition: 0.3s ease;
+      }
+      #modalPoster:hover {
+        transform: scale(1.1);
+      }
     </style>
     <main>
       <div class="modal">
@@ -587,6 +601,46 @@
         ></i>
         <div class="posterContainerModal">
           <img id="modalPoster" src="" />
+          <div style="opacity: 1" class="play-hover">
+            <div class="playBut">
+              <svg
+                enable-background="new 0 0 213.7 213.7"
+                height="100%"
+                version="1.1"
+                viewBox="0 0 213.7 213.7"
+                width="100%"
+                x="0px"
+                xml:space="preserve"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                y="0px"
+              >
+                <polygon
+                  class="triangle"
+                  fill="none"
+                  id="XMLID_18_"
+                  points="73.5,62.5 148.5,105.8 73.5,149.1"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-miterlimit="10"
+                  stroke-width="7"
+                />
+                <circle
+                  class="circle"
+                  cx="106.8"
+                  cy="106.8"
+                  fill="none"
+                  id="XMLID_17_"
+                  r="103.3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-miterlimit="10"
+                  stroke-width="7"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
         <div class="informationContainer">
           <div class="titleContainer">
@@ -600,16 +654,13 @@
                 padding: 10px;
               "
             >
-              <h1 id="modalTitle"></h1>
+              <h1 id="modalTitle">Title</h1>
               <div style="display: flex; padding: 10px">
-                <p id="countryOriginContainer">Year</p>
+                <p id="countryOriginContainer">Genre</p>
                 &nbsp; | &nbsp;
-                <p id="yearReleasedContainer"></p>
+                <p id="yearReleasedContainer">Runtime</p>
                 &nbsp; | &nbsp;
-                <p
-                  style="text-transform: uppercase"
-                  id="MediaTypeContainer"
-                ></p>
+                <p id="MediaTypeContainer">Year</p>
               </div>
             </div>
             <div id="progressBarRating"></div>
@@ -962,11 +1013,12 @@
         }
         .hoverContainer {
           position: absolute;
-          height: 180px;
-          width: 310px;
+          height: 179px;
+          width: 309px;
           background: #e8e8e8;
           display: flex;
           justify-content: center;
+          align-items: center;
           transition: 0.3s ease-out;
           border-radius: 12px;
           cursor: pointer;
@@ -1022,8 +1074,8 @@
           transition-delay: 0.2s;
 
           .backdropImgContainer {
-            transform: translateY(-10%);
-            transition-delay: 0.4s;
+            transform: translateY(-50%);
+            transition-delay: 0.2s;
           }
           .companyInfo {
             opacity: 1;
@@ -1072,7 +1124,7 @@
             font-size: 0.8rem;
           }
           .landingPage {
-            height: 70vh;
+            height: 520px;
           }
           .posterContainer {
             display: flex;
@@ -1102,12 +1154,13 @@
           .slide-topTen,
           .backdropImgContainer,
           .companySlide {
-            height: 160px;
-            width: 260px;
+            height: 120px;
+            width: 200px;
+            border-radius: 8px;
           }
           .hoverContainer:hover {
-            height: 280px;
-            width: 280px;
+            height: 210px;
+            width: 220px;
           }
           .top-ten-text:nth-child(2),
           .top-ten-text:nth-child(3),
@@ -1134,12 +1187,21 @@
           .numbering {
             -webkit-text-stroke: 1px rgb(255, 17, 17);
           }
+          .numbering {
+            font-size: 6rem;
+          }
           .top-ten-container {
             flex-direction: column;
             align-items: flex-start;
           }
           .visibilityButton {
             display: block;
+          }
+          .companyInfo {
+            height: 95px;
+          }
+          .companyInfo p {
+            font-size: 0.6rem;
           }
         }
       </style>
@@ -1167,6 +1229,7 @@
     const posterWrapper = document.getElementById("posterWrapper");
 
     const showlist = [
+      { id: "90228", media_type: "tv" },
       { id: "124364", media_type: "tv" },
       { id: "1184918", media_type: "movie" },
       { id: "945961", media_type: "movie" },
@@ -1346,7 +1409,6 @@ ${isHidden ? "visibility_off" : "visibility"}
       tamad();
     }
     function displayEnglish(meow, number, en, mediaType) {
-      console.log(meow);
       const toptenwrapper = document.querySelector(".wrapper-topten");
       const topTenSlide = document.createElement("div");
       topTenSlide.classList.add("swiper-slide", "slide-topTen");
@@ -1537,7 +1599,7 @@ ${isHidden ? "visibility_off" : "visibility"}
             }
           });
         },
-        { threshold: 0.01 }
+        { threshold: 0.001 }
       );
 
       tamadpiktur.forEach((Image) => {
@@ -1751,6 +1813,10 @@ ${isHidden ? "visibility_off" : "visibility"}
     const buttonEpisodes = document.getElementById("buttonEpisodes");
     const modalTitle = document.getElementById("modalTitle");
     const modalPoster = document.getElementById("modalPoster");
+    const posterContainerModal = document.querySelector(
+      ".posterContainerModal"
+    );
+
     const progressBarRating = document.getElementById("progressBarRating");
     const countryOriginContainer = document.getElementById(
       "countryOriginContainer"
@@ -1824,7 +1890,6 @@ ${isHidden ? "visibility_off" : "visibility"}
         episodeContainer.className = "episodeWrapper";
 
         const seasonData = dataShows.season;
-        console.log(dataShows.season);
 
         // Populate the dropdown with seasons
         seasonData.forEach((season) => {
@@ -1921,15 +1986,19 @@ ${isHidden ? "visibility_off" : "visibility"}
 
       closeModal.addEventListener("click", () => {
         openModal.classList.remove("modal-active");
-        modalTitle.innerText = "";
+        modalTitle.innerText = "Title";
         modalPoster.src = "";
         overviewContainer.innerHTML = "";
         progressBarRating.innerHTML = "";
-        countryOriginContainer.innerHTML = "";
-        yearReleasedContainer.innerHTML = "";
-        MediaTypeContainer.innerHTML = "";
+        countryOriginContainer.innerText = "Runtime";
+        yearReleasedContainer.innerText = "Genre";
+        MediaTypeContainer.innerText = "Year";
         openModal.style.backgroundImage = `url("")`;
         buttonEpisodes.style.display = "none";
+      });
+
+      posterContainerModal.addEventListener("click", () => {
+        console.log(data.id, mediaType);
       });
     }
 
@@ -1940,5 +2009,8 @@ ${isHidden ? "visibility_off" : "visibility"}
       const data = await response.json();
       return data;
     }
+  </script>
+  <script>
+
   </script>
 </html>
