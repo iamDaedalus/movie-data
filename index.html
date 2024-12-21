@@ -366,6 +366,52 @@
   </head>
   <body>
     <style>
+      .iframePlayer {
+        height: 100vh;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #0d0d0d;
+        z-index: 999;
+        display: none;
+        justify-content: center;
+        align-items: center;
+      }
+      .iframePlayerActive {
+        display: flex;
+      }
+      #iframeIframe {
+        height: 90%;
+        width: 100%;
+        border: 0;
+      }
+      #iframeSelect {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 20px;
+        opacity: 0;
+        transition: 0.5s ease;
+      }
+      #closePlayer {
+        opacity: 0;
+        transition: 0.5s ease;
+      }
+
+      .iframePlayer:hover #closePlayer,
+      .iframePlayer:hover #iframeSelect {
+        opacity: 1;
+      }
+    </style>
+    <div class="iframePlayer">
+      <span id="closePlayer" class="material-symbols-rounded"> close </span>
+      <select id="iframeSelect"></select>
+      <iframe id="iframeIframe" src="" frameborder="0"></iframe>
+    </div>
+    <style>
       .modal {
         position: fixed;
         min-height: 100vh;
@@ -378,15 +424,16 @@
         background-color: #0d0d0d;
         display: flex;
         padding: 30px 80px;
-        gap: 10px;
+        gap: 20px;
         color: white;
         opacity: 0;
         pointer-events: none;
-        transition: 0.2s ease-out;
+        transition: 0.3s ease-out;
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;
         overflow-y: auto;
+        transform: translateY(50%) scale(0.5);
       }
       .modal::-webkit-scrollbar {
         display: none;
@@ -407,6 +454,7 @@
       .modal-active {
         opacity: 1;
         pointer-events: all;
+        transform: translateY(0) scale(1);
       }
       .posterContainerModal {
         width: 30%;
@@ -451,8 +499,9 @@
       .buttonsContainer button {
         width: 100%;
         height: 100%;
-        border: 1px solid rgb(0, 0, 0);
         box-shadow: 6px 6px 12px #000000, -6px -6px 12px #1f1f1f;
+        border-radius: 5px;
+        border: 1px solid rgb(74, 74, 74);
       }
       .button-active {
         background: crimson;
@@ -584,21 +633,21 @@
       #modalPoster:hover {
         transform: scale(1.1);
       }
+      #closeModal,
+      #closePlayer {
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: whitesmoke;
+        padding: 20px;
+        font-size: 2rem;
+        cursor: pointer;
+      }
     </style>
     <main>
       <div class="modal">
-        <i
-          id="closeModal"
-          style="
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: whitesmoke;
-            padding: 20px;
-            font-size: 2rem;
-          "
-          class="fa-solid fa-arrow-left-long"
-        ></i>
+        <span id="closeModal" class="material-symbols-rounded"> close </span>
+
         <div class="posterContainerModal">
           <img id="modalPoster" src="" />
           <div style="opacity: 1" class="play-hover">
@@ -1998,7 +2047,8 @@ ${isHidden ? "visibility_off" : "visibility"}
       });
 
       posterContainerModal.addEventListener("click", () => {
-        console.log(data.id, mediaType);
+        iframePlayer.classList.add("iframePlayerActive");
+        sourcePlayer(data.id, mediaType, "1", "1");
       });
     }
 
@@ -2011,6 +2061,76 @@ ${isHidden ? "visibility_off" : "visibility"}
     }
   </script>
   <script>
+    const iframePlayer = document.querySelector(".iframePlayer");
+    const iframeSelect = document.getElementById("iframeSelect");
+    const iframeIframe = document.getElementById("iframeIframe");
+    const closePlayer = document.getElementById("closePlayer");
 
+    closePlayer.addEventListener("click", () => {
+      iframePlayer.classList.remove("iframePlayerActive");
+      iframeIframe.src = "";
+    });
+
+    function sourcePlayer(id, mediaType, season, episode) {
+      console.log(id, mediaType, season, episode);
+
+      // Define servers
+      const servers = [
+        {
+          name: "embedsu",
+          movieLink: `https://embed.su/embed/movie/${id}`,
+          tvLink: `https://embed.su/embed/tv/${id}/${season}/${episode}`,
+        },
+        {
+          name: "vidbinge",
+          movieLink: `https://vidbinge.dev/embed/movie/${id}`,
+          tvLink: `https://vidbinge.dev/embed/tv/${id}/${season}/${episode}`,
+        },
+        {
+          name: "vidsrcCC",
+          movieLink: `https://vidsrc.cc/v2/embed/movie/${id}`,
+          tvLink: `https://vidsrc.cc/v2/embed/tv/${id}/${season}/${episode}`,
+        },
+        {
+          name: "vidlinkPRO",
+          movieLink: `https://vidlink.pro/movie/${id}`,
+          tvLink: `https://vidlink.pro/tv/${id}/${season}/${episode}`,
+        },
+        {
+          name: "primewire",
+          movieLink: `https://www.primewire.tf/embed/movie?tmdb=${id}`,
+          tvLink: `https://www.primewire.tf/embed/tv?tmdb=${id}&season=${season}&episode=${episode}`,
+        },
+      ];
+
+      // Clear existing options
+      iframeSelect.innerHTML = "";
+
+      // Add new options
+      servers.forEach((server) => {
+        const sourceOption = document.createElement("option");
+        sourceOption.innerText = server.name;
+
+        if (mediaType === "tv") {
+          sourceOption.value = server.tvLink;
+        } else if (mediaType === "movie") {
+          sourceOption.value = server.movieLink;
+        } else {
+          console.log("Error: Invalid mediaType");
+          return;
+        }
+
+        iframeSelect.appendChild(sourceOption);
+      });
+
+      // Set default iframe source to the first option
+      iframeIframe.src = iframeSelect.value;
+
+      // Update iframe source on selection change
+      iframeSelect.addEventListener("change", () => {
+        iframeIframe.src = iframeSelect.value;
+        console.log("Source changed to:", iframeIframe.src);
+      });
+    }
   </script>
 </html>
